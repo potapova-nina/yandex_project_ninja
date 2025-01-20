@@ -1,0 +1,107 @@
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
+import { useRef, useState } from "react"
+import IngredientsItems from "./ingredient-items/ingredient-items"
+import { arrayDataBurger, IBurgerIngredient } from "./dto"
+import styles from './burder-ingredients.module.scss';
+
+
+
+function BurgerIngredients() {
+   const [current, setCurrent] = useState<string>('one')
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   const [dataIngredients, setDataIngredients] = useState<IBurgerIngredient[]>(arrayDataBurger);
+
+
+    // Создаем ref для каждой категории
+  const bunsRef = useRef<HTMLDivElement>(null);
+  const saucesRef = useRef<HTMLDivElement>(null);
+  const fillingsRef = useRef<HTMLDivElement>(null);
+
+  // Функция для прокрутки
+  const handleTabClick = (value: string) => {
+    setCurrent(value);
+    if (value === "one" && bunsRef.current) {
+      bunsRef.current.scrollIntoView({ behavior: "smooth" });
+    } else if (value === "two" && saucesRef.current) {
+      saucesRef.current.scrollIntoView({ behavior: "smooth" });
+    } else if (value === "three" && fillingsRef.current) {
+      fillingsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  return (
+    <>
+      <div className={styles.containerSelectBurger}>
+        <p className="text text_type_main-large mb-5">Соберите бургер</p>
+
+        {/* Табы */}
+        <div style={{ display: "flex" }}>
+          <Tab value="one" active={current === "one"} onClick={() => handleTabClick("one")}>
+            Булки
+          </Tab>
+          <Tab value="two" active={current === "two"} onClick={() => handleTabClick("two")}>
+            Соусы
+          </Tab>
+          <Tab value="three" active={current === "three"} onClick={() => handleTabClick("three")}>
+            Начинки
+          </Tab>
+        </div>
+
+        {/* Область с ингредиентами */}
+        <div className={styles.scrollable}>
+          {/* Булки */}
+          <div ref={bunsRef}>
+            <p className="text text_type_main-medium mb-4 mt-4">Булки</p>
+            <div className={styles.burger_items}>
+              {dataIngredients
+                .filter((ingredient) => ingredient.type === "bun")
+                .map((ingredient) => (
+                  <IngredientsItems
+                    key={ingredient._id}
+                    image={ingredient.image}
+                    name={ingredient.name}
+                    price={ingredient.price}
+                  />
+                ))}
+            </div>
+          </div>
+
+          {/* Соусы */}
+          <div ref={saucesRef}>
+            <p className="text text_type_main-medium mb-4 mt-4">Соусы</p>
+            <div className={styles.burger_items}>
+              {dataIngredients
+                .filter((ingredient) => ingredient.type === "sauce")
+                .map((ingredient) => (
+                  <IngredientsItems
+                    key={ingredient._id}
+                    image={ingredient.image}
+                    name={ingredient.name}
+                    price={ingredient.price}
+                  />
+                ))}
+            </div>
+          </div>
+
+          {/* Начинки */}
+          <div ref={fillingsRef}>
+            <p className="text text_type_main-medium mb-4 mt-4">Начинки</p>
+            <div className={styles.burger_items}>
+              {dataIngredients
+                .filter((ingredient) => ingredient.type === "main")
+                .map((ingredient) => (
+                  <IngredientsItems
+                    key={ingredient._id}
+                    image={ingredient.image}
+                    name={ingredient.name}
+                    price={ingredient.price}
+                  />
+                ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default BurgerIngredients

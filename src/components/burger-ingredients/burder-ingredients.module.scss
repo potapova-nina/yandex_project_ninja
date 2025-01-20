@@ -1,0 +1,18 @@
+.containerSelectBurger {
+
+ margin-top: 3vh;
+ margin-left: 8vw;
+ max-width: 40%;
+ 
+}
+
+.scrollable {
+  max-height: 70vh;
+  overflow-y: auto; 
+}
+.burger_items{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+}
