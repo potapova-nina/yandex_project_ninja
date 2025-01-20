@@ -1,4 +1,5 @@
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import styles from './ingredients-details.module.scss';
 
 interface IIngredientsDetailsProps {
   "name":string,
@@ -8,7 +9,7 @@ interface IIngredientsDetailsProps {
 function IngredientsDetails(dataBurgerIngredients : IIngredientsDetailsProps) {
   return (
     <> 
-    <div style={{display:"flex", gap:"1vw"}}>
+    <div className={styles.details}>
       <p className="text text_type_main-medium ml-20 mb-3">
         {dataBurgerIngredients.price} 
       </p>

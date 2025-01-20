@@ -16,7 +16,7 @@ function AppHeader() {
       </div>
       <Logo />
       <div>
-      <div className={styles.menuItem}  style={{marginLeft:"3vw"}}>
+      <div className={styles.login}  >
         <ProfileIcon type="secondary" />
         <p className="text text_type_main-default">Личный кабинет</p>
       </div>

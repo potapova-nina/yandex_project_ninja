@@ -1,4 +1,4 @@
-import './App.css'
+import styles from './App.module.scss'
 import AppHeader from './components/app-header/app-header'
 import BurgerConstructor from './components/burger-constructor/burger-constructor'
 import BurgerIngredients from './components/burger-ingredients/burger-ingredients'
@@ -6,11 +6,14 @@ import BurgerIngredients from './components/burger-ingredients/burger-ingredient
 function App() {
   return (
     <>
+    
     <AppHeader />
-    <div style={{ display: 'flex' }}>
+    <main>
+    <div className={styles.mainApp}>
     <BurgerIngredients />
     <BurgerConstructor />
     </div>
+    </main>
     </>
   )
 }

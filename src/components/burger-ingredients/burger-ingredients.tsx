@@ -30,11 +30,11 @@ function BurgerIngredients() {
   };
   return (
     <>
-      <div className={styles.containerSelectBurger}>
+      <div className={styles.container_select_burger}>
         <p className="text text_type_main-large mb-5">Соберите бургер</p>
 
         {/* Табы */}
-        <div style={{ display: "flex" }}>
+        <div className={styles.tab_component}>
           <Tab value="one" active={current === "one"} onClick={() => handleTabClick("one")}>
             Булки
           </Tab>
