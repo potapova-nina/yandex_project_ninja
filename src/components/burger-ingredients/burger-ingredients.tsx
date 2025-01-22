@@ -1,15 +1,29 @@
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import IngredientsItems from "./ingredient-items/ingredient-items"
-import { arrayDataBurger, IBurgerIngredient } from "./dto"
 import styles from './burder-ingredients.module.scss';
+import ingredientService from '../../service/burger-ingredients.service'
+import { IBurgerIngredient } from "./dto";
+
 
 
 
 function BurgerIngredients() {
    const [current, setCurrent] = useState<string>('one')
-   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-   const [dataIngredients, setDataIngredients] = useState<IBurgerIngredient[]>(arrayDataBurger);
+   const [dataIngredients, setDataIngredients] = useState<IBurgerIngredient[]>([]);
+
+  const getIngredients= async()=>{
+    try {
+      const response = await ingredientService.getIngredients();
+      setDataIngredients(response?.data)
+    } catch (error) {
+      console.error('Failed to fetch ingredients:', error);
+    }
+  }
+
+  useEffect(()=>{
+    getIngredients();
+  },[])
 
 
     // Создаем ref для каждой категории
