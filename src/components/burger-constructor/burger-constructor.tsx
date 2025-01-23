@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 import styles from "./burger-constructor.module.scss";
 import ingredientService from '../../service/burger-ingredients.service'
 import { IBurgerIngredient } from "../burger-ingredients/dto";
+import Modal from "../modal/modal";
+import OrderDetails from "../order-details/order-details";
+import ModalOverlay from "../modal-overlay/modal-overlay";
 
 function BurgerConstructor() {
   const [dataIngredients, setDataIngredients] = useState<IBurgerIngredient[]>([]);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  
 
   const getIngredients= async()=>{
     try {
@@ -20,6 +25,14 @@ function BurgerConstructor() {
     useEffect(()=>{
       getIngredients();
     },[])
+
+    const handleOpenOrderModal = () => {
+    setIsOrderModalOpen(true); // Открыть модалку
+  };
+
+  const handleCloseOrderModal = () => {
+    setIsOrderModalOpen(false); // Закрыть модалку
+  };
 
   return (
     <>
@@ -65,10 +78,19 @@ function BurgerConstructor() {
               81460 
          </p>
          <CurrencyIcon type="primary" className="mr-10"/>
-      <Button htmlType={"button"}>Оформить заказ</Button>
+      <Button htmlType={"button"}  onClick={handleOpenOrderModal}>Оформить заказ</Button>
        
       </div>
     </div>
+    {isOrderModalOpen && (
+      <>
+        <Modal onClose={handleCloseOrderModal} title=" ">
+          <OrderDetails />
+        </Modal>
+        <ModalOverlay onClose={handleCloseOrderModal} />
+        </>
+      )}
+    
     
     </>
   );

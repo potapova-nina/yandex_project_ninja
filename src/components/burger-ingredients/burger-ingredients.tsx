@@ -4,6 +4,9 @@ import IngredientsItems from "./ingredient-items/ingredient-items"
 import styles from './burder-ingredients.module.scss';
 import ingredientService from '../../service/burger-ingredients.service'
 import { IBurgerIngredient } from "./dto";
+import Modal from "../modal/modal";
+import IngredientDetails from "../ingredient-details/ingredient-details";
+import ModalOverlay from "../modal-overlay/modal-overlay";
 
 
 
@@ -11,10 +14,20 @@ import { IBurgerIngredient } from "./dto";
 function BurgerIngredients() {
    const [current, setCurrent] = useState<string>('one')
    const [dataIngredients, setDataIngredients] = useState<IBurgerIngredient[]>([]);
+   const [selectedIngredient, setSelectedIngredient] = useState<IBurgerIngredient | null>(null);
+
+  const handleIngredientClick = (ingredient: IBurgerIngredient) => {
+    setSelectedIngredient(ingredient);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedIngredient(null);
+  };
 
   const getIngredients= async()=>{
     try {
       const response = await ingredientService.getIngredients();
+      console.log(response)
       setDataIngredients(response?.data)
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
@@ -69,12 +82,14 @@ function BurgerIngredients() {
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "bun")
                 .map((ingredient) => (
+                  <div onClick={() => handleIngredientClick(ingredient)} >
                   <IngredientsItems
                     key={ingredient._id}
                     image={ingredient.image}
                     name={ingredient.name}
                     price={ingredient.price}
                   />
+                  </div>
                 ))}
             </div>
           </div>
@@ -86,12 +101,14 @@ function BurgerIngredients() {
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "sauce")
                 .map((ingredient) => (
+                   <div onClick={() => handleIngredientClick(ingredient)} >
                   <IngredientsItems
                     key={ingredient._id}
                     image={ingredient.image}
                     name={ingredient.name}
                     price={ingredient.price}
                   />
+                  </div>
                 ))}
             </div>
           </div>
@@ -103,17 +120,27 @@ function BurgerIngredients() {
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "main")
                 .map((ingredient) => (
+                   <div onClick={() => handleIngredientClick(ingredient)} >
                   <IngredientsItems
                     key={ingredient._id}
                     image={ingredient.image}
                     name={ingredient.name}
                     price={ingredient.price}
                   />
+                  </div>
                 ))}
             </div>
           </div>
         </div>
       </div>
+      {selectedIngredient && (
+        <>
+          <Modal onClose={handleCloseModal} title="Детали ингредиента">
+            <IngredientDetails ingredient={selectedIngredient} />
+          </Modal>
+          <ModalOverlay onClose={handleCloseModal} />
+        </>
+      )}
     </>
   )
 }
