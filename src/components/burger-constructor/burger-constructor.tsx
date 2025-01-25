@@ -1,7 +1,7 @@
 import { Button, ConstructorElement, CurrencyIcon, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useEffect, useState } from "react";
 import styles from "./burger-constructor.module.scss";
-import ingredientService from '../../service/burger-ingredients.service'
+import ingredientService from '../../api/burger-ingredients.api'
 import { IBurgerIngredient } from "../burger-ingredients/dto";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
@@ -15,7 +15,7 @@ function BurgerConstructor() {
   const getIngredients= async()=>{
     try {
       const response = await ingredientService.getIngredients();
-      console.log(response?.data)
+
       setDataIngredients(response?.data)
     } catch (error) {
         console.error('Failed to fetch ingredients:', error);

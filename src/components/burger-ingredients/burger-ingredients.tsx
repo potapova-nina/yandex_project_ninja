@@ -2,7 +2,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
 import { useEffect, useRef, useState } from "react"
 import IngredientsItems from "./ingredient-items/ingredient-items"
 import styles from './burder-ingredients.module.scss';
-import ingredientService from '../../service/burger-ingredients.service'
+import ingredientService from '../../api/burger-ingredients.api'
 import { IBurgerIngredient } from "./dto";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
@@ -27,7 +27,6 @@ function BurgerIngredients() {
   const getIngredients= async()=>{
     try {
       const response = await ingredientService.getIngredients();
-      console.log(response)
       setDataIngredients(response?.data)
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
@@ -82,7 +81,7 @@ function BurgerIngredients() {
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "bun")
                 .map((ingredient) => (
-                  <div onClick={() => handleIngredientClick(ingredient)} >
+                  <div  key={ingredient._id} onClick={() => handleIngredientClick(ingredient)} >
                   <IngredientsItems
                     key={ingredient._id}
                     image={ingredient.image}
@@ -101,7 +100,7 @@ function BurgerIngredients() {
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "sauce")
                 .map((ingredient) => (
-                   <div onClick={() => handleIngredientClick(ingredient)} >
+                   <div  key={ingredient._id} onClick={() => handleIngredientClick(ingredient)} >
                   <IngredientsItems
                     key={ingredient._id}
                     image={ingredient.image}
@@ -120,7 +119,7 @@ function BurgerIngredients() {
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "main")
                 .map((ingredient) => (
-                   <div onClick={() => handleIngredientClick(ingredient)} >
+                   <div  key={ingredient._id} onClick={() => handleIngredientClick(ingredient)} >
                   <IngredientsItems
                     key={ingredient._id}
                     image={ingredient.image}
