@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10vh;
+  margin-left: 5vw;
+  max-width: 60vw; 
+  height: 70vh;
+
+}
+
+.scrollable {
+  max-height: 37vh;
+  overflow-y: auto; 
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 1.3vw; 
+}
+
+.ingredient {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-right: 1vw;
+  margin-top: 2vh;
+  
+}
