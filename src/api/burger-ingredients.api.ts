@@ -1,9 +1,20 @@
 import { IBurgerIngredient } from "../components/burger-ingredients/dto";
 
-type ApiResponse<T> = {
-  data: T;
+type ApiResponse<T> = T extends { success: boolean }
+  ? T // Если T уже содержит success, просто используем T
+  : {
+      data: T; // Иначе добавляем data
+      success: boolean;
+    };
+
+interface OrderResponse  {
+  name: string;
+  order: {
+    number: number;
+  };
   success: boolean;
-};
+}
+
 
 const checkResponse = async <T>(response: Response): Promise<T> => {
   if (response.ok) {
@@ -16,16 +27,33 @@ const checkResponse = async <T>(response: Response): Promise<T> => {
 };
 
 class IngredientService {
-  private baseUrl: string;
+  private getAllIngredientsURL: string;
+  private createOrderURL: string;
 
   constructor() {
-    this.baseUrl = 'https://norma.nomoreparties.space/api/ingredients';
+    this.getAllIngredientsURL = 'https://norma.nomoreparties.space/api/ingredients';
+    this.createOrderURL = 'https://norma.nomoreparties.space/api/orders';
   }
 
   async getIngredients(): Promise<ApiResponse<IBurgerIngredient[]>> {
-    return fetch(this.baseUrl, {
+    return fetch(this.getAllIngredientsURL, {
       method: 'GET',
     }).then((response) => checkResponse<ApiResponse<IBurgerIngredient[]>>(response));
+  }
+
+
+  async postCreateOrder(ingredients: string[]):Promise<ApiResponse<OrderResponse>>
+  {
+    return fetch(this.createOrderURL, {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ingredients }), 
+    }).then((response) => checkResponse<OrderResponse>(response));
+    
+  
+    
   }
 }
 
