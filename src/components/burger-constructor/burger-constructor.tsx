@@ -1,12 +1,11 @@
 import { Button, ConstructorElement, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./burger-constructor.module.scss";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
-import ModalOverlay from "../modal-overlay/modal-overlay";
 import { AppDispatch, RootState } from "../../services/store";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchIngredients } from "../../services/ingredients-slice";
+
 import { createOrder } from "../../services/order-slice";
 import { useDrop } from "react-dnd";
 import { addIngredient, setBun } from "../../services/constructor-slice";
@@ -18,7 +17,6 @@ function BurgerConstructor() {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const dispatch: AppDispatch = useDispatch();
 
-  const { status } = useSelector((state: RootState) => state.ingredients);
   const { bun, ingredients } = useSelector((state: RootState) => state.constructor);
   const orderNumber = useSelector((state: RootState) => state.order.orderNumber);
 
@@ -27,11 +25,7 @@ function BurgerConstructor() {
     (bun ? bun.price * 2 : 0) +
     (ingredients ? ingredients.reduce((sum, ing) => sum + ing.price, 0) : 0);
 
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, status]);
+
 
   const handleOpenOrderModal = () => {
     const ingredientIds: string[] = [];
@@ -124,7 +118,6 @@ function BurgerConstructor() {
           <Modal onClose={handleCloseOrderModal} title=" ">
             <OrderDetails orderNumber={orderNumber} />
           </Modal>
-          <ModalOverlay onClose={handleCloseOrderModal} />
         </>
       )}
     </>

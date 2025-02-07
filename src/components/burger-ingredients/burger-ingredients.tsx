@@ -2,13 +2,10 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../services/store";
-
 import styles from "./burder-ingredients.module.scss";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import ModalOverlay from "../modal-overlay/modal-overlay";
 import { IBurgerIngredient } from "./dto";
-import { fetchIngredients } from "../../services/ingredients-slice";
 import { clearSelectedIngredient, selectIngedient } from "../../services/select-ingredients-slice";
 import DraggableIngredient from "./draggable-ingredient/draggable-ingredient";
 
@@ -16,14 +13,8 @@ function BurgerIngredients() {
   const [current, setCurrent] = useState<string>("one");
 
   const dispatch: AppDispatch = useDispatch();
-  const { list: dataIngredients, status } = useSelector((state: RootState) => state.ingredients);
+  const { list: dataIngredients } = useSelector((state: RootState) => state.ingredients);
   const selectedIngredient = useSelector((state: RootState) => state.selectIngedient.selectedIngredient);
-
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, status]);
 
   const handleIngredientClick = (ingredient: IBurgerIngredient) => { 
     dispatch(selectIngedient(ingredient));
@@ -129,7 +120,6 @@ function BurgerIngredients() {
           <Modal onClose={handleCloseModal} title="Детали ингредиента">
             <IngredientDetails ingredient={selectedIngredient} />
           </Modal>
-          <ModalOverlay onClose={handleCloseModal} />
         </>
       )}
     </>
