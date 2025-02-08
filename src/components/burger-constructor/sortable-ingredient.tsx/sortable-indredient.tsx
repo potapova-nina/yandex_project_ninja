@@ -1,18 +1,26 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
+import {
+  DragIcon,
+  ConstructorElement,
+} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../burger-constructor.module.scss';
 import { useDispatch } from 'react-redux';
-import { ConstructorIngredient, moveIngredient, removeIngredient } from '../../../services/constructor-slice';
-
-
+import {
+  ConstructorIngredient,
+  moveIngredient,
+  removeIngredient,
+} from '../../../services/constructor-slice';
 
 interface SortableIngredientProps {
   ingredient: ConstructorIngredient;
   index: number;
 }
 
-const SortableIngredient: React.FC<SortableIngredientProps> = ({ ingredient, index }) => {
+const SortableIngredient: React.FC<SortableIngredientProps> = ({
+  ingredient,
+  index,
+}) => {
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -35,7 +43,8 @@ const SortableIngredient: React.FC<SortableIngredientProps> = ({ ingredient, ind
 
       // Получаем размеры элемента на экране
       const hoverBoundingRect = ref.current.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
       if (!clientOffset) return;
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;

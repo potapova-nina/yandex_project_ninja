@@ -1,38 +1,46 @@
-import { Button, ConstructorElement, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useState } from "react";
-import styles from "./burger-constructor.module.scss";
-import Modal from "../modal/modal";
-import OrderDetails from "../order-details/order-details";
-import { AppDispatch, RootState } from "../../services/store";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  Button,
+  ConstructorElement,
+  CurrencyIcon,
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import { useState } from 'react';
+import styles from './burger-constructor.module.scss';
+import Modal from '../modal/modal';
+import OrderDetails from '../order-details/order-details';
+import { AppDispatch, RootState } from '../../services/store';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { createOrder } from "../../services/order-slice";
-import { useDrop } from "react-dnd";
-import { addIngredient, setBun } from "../../services/constructor-slice";
-import { IBurgerIngredient } from "../burger-ingredients/dto";
-import SortableIngredient from "./sortable-ingredient.tsx/sortable-indredient";
-
+import { createOrder } from '../../services/order-slice';
+import { useDrop } from 'react-dnd';
+import { addIngredient, setBun } from '../../services/constructor-slice';
+import { IBurgerIngredient } from '../burger-ingredients/dto';
+import SortableIngredient from './sortable-ingredient.tsx/sortable-indredient';
 
 function BurgerConstructor() {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const dispatch: AppDispatch = useDispatch();
 
-  const { bun, ingredients } = useSelector((state: RootState) => state.constructor);
-  const orderNumber = useSelector((state: RootState) => state.order.orderNumber);
+  const { bun, ingredients } = useSelector(
+    (state: RootState) => state.constructor,
+  );
+
+  const orderNumber = useSelector(
+    (state: RootState) => state.order.orderNumber,
+  );
 
   // Итоговая цена: булка учитывается дважды + сумма цен остальных ингредиентов
   const totalPrice =
     (bun ? bun.price * 2 : 0) +
     (ingredients ? ingredients.reduce((sum, ing) => sum + ing.price, 0) : 0);
 
-
-
   const handleOpenOrderModal = () => {
     const ingredientIds: string[] = [];
     if (bun) {
       ingredientIds.push(bun._id, bun._id);
     }
-    ingredients.forEach((ing) => ingredientIds.push(ing._id));
+    if (ingredients) {
+      ingredients.forEach((ing) => ingredientIds.push(ing._id));
+    }
 
     dispatch(createOrder(ingredientIds));
     setIsOrderModalOpen(true);
@@ -43,10 +51,14 @@ function BurgerConstructor() {
   };
 
   // Drop-цель для добавления ингредиентов из списка (с булкой отдельно)
-  const [{ isHover }, dropRef] = useDrop<IBurgerIngredient, void, { isHover: boolean }>({
-    accept: "ingredient",
+  const [{ isHover }, dropRef] = useDrop<
+    IBurgerIngredient,
+    void,
+    { isHover: boolean }
+  >({
+    accept: 'ingredient',
     drop(item: IBurgerIngredient) {
-      if (item.type === "bun") {
+      if (item.type === 'bun') {
         dispatch(setBun(item));
       } else {
         dispatch(addIngredient(item));
@@ -57,7 +69,9 @@ function BurgerConstructor() {
     }),
   });
 
-  const dropAreaStyle = isHover ? { border: "2px solid pink", borderRadius: "20px" } : {};
+  const dropAreaStyle = isHover
+    ? { border: '2px solid pink', borderRadius: '20px' }
+    : {};
 
   return (
     <>
@@ -73,7 +87,9 @@ function BurgerConstructor() {
             extraClass="ml-8"
           />
         ) : (
-          <div className={`${styles.placeholder} ml-8 mt-10`}>Перетащите булку</div>
+          <div className={`${styles.placeholder} ml-8 mt-10`}>
+            Перетащите булку
+          </div>
         )}
 
         {/* Список сортируемых ингредиентов */}
@@ -108,7 +124,7 @@ function BurgerConstructor() {
             {totalPrice ? totalPrice : 0}
           </p>
           <CurrencyIcon type="primary" className="mr-10" />
-          <Button htmlType={"button"} onClick={handleOpenOrderModal}>
+          <Button htmlType={'button'} onClick={handleOpenOrderModal}>
             Оформить заказ
           </Button>
         </div>
