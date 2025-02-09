@@ -1525,11 +1525,6 @@ for-each@^0.3.3:
   dependencies:
     is-callable "^1.2.7"
 
-"format@prettier --write .":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/format/-/format-0.2.2.tgz#d6170107e9efdc4ed30c9dc39016df942b5cb58b"
-  integrity sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==
-
 fsevents@~2.3.2, fsevents@~2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
@@ -1988,11 +1983,6 @@ levn@^0.4.1:
   dependencies:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
-
-"lint@eslint . --ext .js,.jsx,.ts,.tsx --config .eslintrc.cjs":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/lint/-/lint-1.1.2.tgz#35ed064f322547c331358d899868664968ba371f"
-  integrity sha512-kOzKdN0iSdkx57102MxZd64yn32rHaB6xqBMN3hyCRiBV2xiurM75XWvTHWNK/SJBCddHPhjDLV+kNr3Uf1MGg==
 
 locate-path@^6.0.0:
   version "6.0.0"
