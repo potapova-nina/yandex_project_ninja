@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import styles from "./modal.module.scss";
+import ModalOverlay from "../modal-overlay/modal-overlay";
 
 interface ModalProps {
   title?: string;
@@ -27,7 +28,11 @@ const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
   if (!modalRoot) return null;
 
   return ReactDOM.createPortal(
+    <div>
+       <ModalOverlay onClose={onClose} />
+   
     <div className={styles.modal}>
+     
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
           {title && <p className="text text_type_main-medium">{title} </p>}
@@ -39,9 +44,11 @@ const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
           {children}
           </div>
       </div>
+    </div>
     </div>,
     modalRoot
   );
+   
 };
 
 export default Modal;

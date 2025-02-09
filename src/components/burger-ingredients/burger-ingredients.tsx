@@ -1,49 +1,34 @@
-import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
-import { useEffect, useRef, useState } from "react"
-import IngredientsItems from "./ingredient-items/ingredient-items"
-import styles from './burder-ingredients.module.scss';
-import ingredientService from '../../api/burger-ingredients.api'
-import { IBurgerIngredient } from "./dto";
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../services/store";
+import styles from "./burder-ingredients.module.scss";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import ModalOverlay from "../modal-overlay/modal-overlay";
-
-
-
+import { IBurgerIngredient } from "./dto";
+import { clearSelectedIngredient, selectIngedient } from "../../services/select-ingredients-slice";
+import DraggableIngredient from "./draggable-ingredient/draggable-ingredient";
 
 function BurgerIngredients() {
-   const [current, setCurrent] = useState<string>('one')
-   const [dataIngredients, setDataIngredients] = useState<IBurgerIngredient[]>([]);
-   const [selectedIngredient, setSelectedIngredient] = useState<IBurgerIngredient | null>(null);
+  const [current, setCurrent] = useState<string>("one");
 
-  const handleIngredientClick = (ingredient: IBurgerIngredient) => {
-    setSelectedIngredient(ingredient);
+  const dispatch: AppDispatch = useDispatch();
+  const { list: dataIngredients } = useSelector((state: RootState) => state.ingredients);
+  const selectedIngredient = useSelector((state: RootState) => state.selectIngedient.selectedIngredient);
+
+  const handleIngredientClick = (ingredient: IBurgerIngredient) => { 
+    dispatch(selectIngedient(ingredient));
   };
 
   const handleCloseModal = () => {
-    setSelectedIngredient(null);
+    dispatch(clearSelectedIngredient());
   };
 
-  const getIngredients= async()=>{
-    try {
-      const response = await ingredientService.getIngredients();
-      setDataIngredients(response?.data)
-    } catch (error) {
-      console.error('Failed to fetch ingredients:', error);
-    }
-  }
-
-  useEffect(()=>{
-    getIngredients();
-  },[])
-
-
-    // Создаем ref для каждой категории
   const bunsRef = useRef<HTMLDivElement>(null);
   const saucesRef = useRef<HTMLDivElement>(null);
   const fillingsRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Функция для прокрутки
   const handleTabClick = (value: string) => {
     setCurrent(value);
     if (value === "one" && bunsRef.current) {
@@ -54,12 +39,38 @@ function BurgerIngredients() {
       fillingsRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const handleScroll = useCallback(() => {
+    if (!bunsRef.current || !saucesRef.current || !fillingsRef.current || !containerRef.current) {
+      return;
+    }
+
+    const saucesTop = saucesRef.current.getBoundingClientRect().top;
+    const fillingsTop = fillingsRef.current.getBoundingClientRect().top;
+    const containerTop = containerRef.current.getBoundingClientRect().top;
+    const offset = 50;
+
+    if (fillingsTop - containerTop < offset) {
+      setCurrent("three");
+    } else if (saucesTop - containerTop < offset) {
+      setCurrent("two");
+    } else {
+      setCurrent("one");
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll]);
+
   return (
     <>
       <div className={styles.container_select_burger}>
         <p className="text text_type_main-large mb-5">Соберите бургер</p>
-
-        {/* Табы */}
         <div className={styles.tab_component}>
           <Tab value="one" active={current === "one"} onClick={() => handleTabClick("one")}>
             Булки
@@ -71,62 +82,34 @@ function BurgerIngredients() {
             Начинки
           </Tab>
         </div>
-
-        {/* Область с ингредиентами */}
-        <div className={styles.scrollable}>
-          {/* Булки */}
+        <div className={styles.scrollable} ref={containerRef}>
           <div ref={bunsRef}>
             <p className="text text_type_main-medium mb-4 mt-4">Булки</p>
             <div className={styles.burger_items}>
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "bun")
                 .map((ingredient) => (
-                  <div  key={ingredient._id} onClick={() => handleIngredientClick(ingredient)} >
-                  <IngredientsItems
-                    key={ingredient._id}
-                    image={ingredient.image}
-                    name={ingredient.name}
-                    price={ingredient.price}
-                  />
-                  </div>
+                  <DraggableIngredient key={ingredient._id} ingredient={ingredient} onClick={handleIngredientClick} />
                 ))}
             </div>
           </div>
-
-          {/* Соусы */}
           <div ref={saucesRef}>
             <p className="text text_type_main-medium mb-4 mt-4">Соусы</p>
             <div className={styles.burger_items}>
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "sauce")
                 .map((ingredient) => (
-                   <div  key={ingredient._id} onClick={() => handleIngredientClick(ingredient)} >
-                  <IngredientsItems
-                    key={ingredient._id}
-                    image={ingredient.image}
-                    name={ingredient.name}
-                    price={ingredient.price}
-                  />
-                  </div>
+                  <DraggableIngredient key={ingredient._id} ingredient={ingredient} onClick={handleIngredientClick} />
                 ))}
             </div>
           </div>
-
-          {/* Начинки */}
           <div ref={fillingsRef}>
             <p className="text text_type_main-medium mb-4 mt-4">Начинки</p>
             <div className={styles.burger_items}>
               {dataIngredients
                 .filter((ingredient) => ingredient.type === "main")
                 .map((ingredient) => (
-                   <div  key={ingredient._id} onClick={() => handleIngredientClick(ingredient)} >
-                  <IngredientsItems
-                    key={ingredient._id}
-                    image={ingredient.image}
-                    name={ingredient.name}
-                    price={ingredient.price}
-                  />
-                  </div>
+                  <DraggableIngredient key={ingredient._id} ingredient={ingredient} onClick={handleIngredientClick} />
                 ))}
             </div>
           </div>
@@ -137,11 +120,11 @@ function BurgerIngredients() {
           <Modal onClose={handleCloseModal} title="Детали ингредиента">
             <IngredientDetails ingredient={selectedIngredient} />
           </Modal>
-          <ModalOverlay onClose={handleCloseModal} />
         </>
       )}
     </>
-  )
+  );
 }
 
-export default BurgerIngredients
+export default BurgerIngredients;
+
