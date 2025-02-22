@@ -1,22 +1,23 @@
 .container_select_burger {
+  margin-top: 3vh;
+  margin-left: 8vw;
+  max-width: 42%;
+}
 
- margin-top: 3vh;
- margin-left: 8vw;
- max-width: 42%;
- 
+.burger_page {
+  display: flex;
 }
 
 .scrollable {
   max-height: 70vh;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
-.burger_items{
+.burger_items {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
 }
 
-.tab_component{
+.tab_component {
   display: flex;
 }
