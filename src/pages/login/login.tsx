@@ -3,22 +3,43 @@ import {
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './login.module.scss';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppDispatch, RootState } from '../../services/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLoginUser } from '../../services/login-slice';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [value, setValue] = useState('');
-  const inputRef = useRef<HTMLInputElement | null>(null); // Указываем тип
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const passwordHidden = useRef<HTMLInputElement | null>(null); // Указываем тип
 
-  const [value2, setValue2] = useState('');
-  const inputRef2 = useRef<HTMLInputElement | null>(null); // Указываем тип
+  const dispatch: AppDispatch = useDispatch();
+  const { success } = useSelector((state: RootState) => state.login);
 
-  const onIconClick2 = () => {
+  const onCkickPasswordHidden = () => {
     setTimeout(() => {
-      inputRef.current?.focus();
+      passwordHidden.current?.focus();
     }, 0);
     alert('Icon Click Callback');
+  };
+
+  useEffect(() => {
+    if (success) {
+      setEmail('');
+      setPassword('');
+      navigate('/burgers');
+    }
+  }, [success, navigate]); // Отслеживаем изменения success
+
+  const onClickLogin = () => {
+    dispatch(
+      fetchLoginUser({
+        email: email,
+        password: password,
+      }),
+    );
   };
 
   return (
@@ -26,25 +47,29 @@ function LoginPage() {
       <div className={styles.login}>
         <Input
           type="text"
-          placeholder="Логин"
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-          ref={inputRef}
+          placeholder="E-mail"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
           size="default"
           extraClass="ml-1 mb-4"
         />
         <Input
           type="text"
-          onChange={(e) => setValue2(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           icon="HideIcon"
           placeholder="Пароль"
-          value={value2}
-          ref={inputRef2}
-          onIconClick={onIconClick2}
+          value={password}
+          ref={passwordHidden}
+          onIconClick={onCkickPasswordHidden}
           size="default"
           extraClass="ml-1 mb-4"
         />
-        <Button htmlType="button" type="primary" size="medium">
+        <Button
+          htmlType="button"
+          type="primary"
+          size="medium"
+          onClick={onClickLogin}
+        >
           Войти
         </Button>
         <div className="mt-10">

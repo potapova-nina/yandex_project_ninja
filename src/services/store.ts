@@ -5,6 +5,7 @@ import constructorReducer from './constructor-slice';
 import selectIngedientReducer from './select-ingredients-slice';
 import orderReducer from './order-slice';
 import registerReducer from './register-slice';
+import loginReducer from './login-slice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     selectIngedient: selectIngedientReducer,
     order: orderReducer,
     register: registerReducer,
+    login: loginReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
