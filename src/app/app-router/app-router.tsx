@@ -1,11 +1,11 @@
 import { FC, ReactElement } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
-import LoginPage from '../../components/login/login';
+import LoginPage from '../../pages/login/login';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
-import ForgotPassword from '../../components/login/forgot-password/forgot-password';
-import ResetPassword from '../../components/login/reset-password/reset-password';
-import RegisterPage from '../../components/register/register';
-import Profile from '../../components/profile/profile';
+import ForgotPassword from '../../pages/login/forgot-password/forgot-password';
+import ResetPassword from '../../pages/login/reset-password/reset-password';
+import RegisterPage from '../../pages/register/register';
+import Profile from '../../pages/profile/profile';
 
 export const AppRouter: FC = (): ReactElement => {
   return (
