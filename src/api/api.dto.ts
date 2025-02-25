@@ -32,6 +32,15 @@ export interface ILoginResponse {
   };
 }
 
+export interface IForgotAndResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface IResetPassword {
+  password: string;
+  token: string;
+}
 export interface IUpdateTokenData {
   token: string; //"значение refreshToken"
 }

@@ -3,13 +3,28 @@ import {
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './forgot-password.module.scss';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UserAuthAPI from '../../../api/auth.api';
 
 function ForgotPassword() {
   const navigate = useNavigate();
-  const [value, setValue] = useState('');
-  const inputRef = useRef<HTMLInputElement | null>(null); // Указываем тип
+  const [email, setEmail] = useState<string>('');
+  const [succes, setSuccess] = useState<boolean>(false);
+
+  const forgotPassword = async (emailData: string) => {
+    console.log(emailData, 'email for reset');
+    const response = await UserAuthAPI.postForgotPasswordRequest(emailData);
+    console.log(response, 'response');
+    setSuccess(response.success);
+    return response;
+  };
+
+  useEffect(() => {
+    if (succes) {
+      navigate('/reset-password');
+    }
+  }, [succes]);
 
   return (
     <>
@@ -18,9 +33,8 @@ function ForgotPassword() {
         <Input
           type="text"
           placeholder="Укажите e-mail"
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-          ref={inputRef}
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
           size="default"
           extraClass="ml-1 mb-4"
         />
@@ -30,7 +44,7 @@ function ForgotPassword() {
           type="primary"
           size="medium"
           onClick={() => {
-            navigate('/reset-password');
+            forgotPassword(email);
           }}
         >
           Восстановить

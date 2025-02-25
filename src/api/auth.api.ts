@@ -1,11 +1,13 @@
 import {
   BASE_URL,
+  IForgotAndResetPasswordResponse,
   ILoginData,
   ILoginResponse,
   ILogoutData,
   ILogoutResponse,
   IRegisterData,
   IRegisterResponse,
+  IResetPassword,
   IUpdateTokenData,
   IUpdateTokenResponse,
 } from './api.dto';
@@ -25,12 +27,16 @@ const checkResponse = async <T>(response: Response): Promise<T> => {
 class UserAuthAPI {
   private postRegister: string;
   private postLogin: string;
+  private postForgotPassword: string;
+  private postResetPassword: string;
   private postToken: string;
   private postLogout: string;
 
   constructor() {
     this.postRegister = '/auth/register'; //эндпоинт для регистрации пользователя.
     this.postLogin = '/auth/login'; //эндпоинт для авторизации.
+    this.postForgotPassword = '/password-reset'; //эндпоинт для авторизации.
+    this.postResetPassword = '/password-reset/reset'; //эндпоинт для авторизации.
     this.postToken = '/auth/token'; //эндпоинт обновления токена.
     this.postLogout = '/auth/logout'; //эндпоинт для выхода из системы.
   }
@@ -57,6 +63,35 @@ class UserAuthAPI {
       },
       body: JSON.stringify({ ...data }),
     }).then((response) => checkResponse<ILoginResponse>(response));
+  }
+
+  async postForgotPasswordRequest(
+    email: string,
+  ): Promise<ApiResponse<IForgotAndResetPasswordResponse>> {
+    return fetch(BASE_URL + this.postForgotPassword, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    }).then((response) =>
+      checkResponse<IForgotAndResetPasswordResponse>(response),
+    );
+  }
+
+  async postResetPasswordRequest(
+    data: IResetPassword,
+  ): Promise<ApiResponse<IForgotAndResetPasswordResponse>> {
+    return fetch(BASE_URL + this.postResetPassword, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...data }),
+    }).then((response) =>
+      checkResponse<IForgotAndResetPasswordResponse>(response),
+    );
   }
 
   async postUpdateTokenRequest(

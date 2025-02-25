@@ -3,13 +3,32 @@ import {
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './reset-password.module.scss';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UserAuthAPI from '../../../api/auth.api';
+import {
+  IForgotAndResetPasswordResponse,
+  IResetPassword,
+} from '../../../api/api.dto';
 
 function ResetPassword() {
   const navigate = useNavigate();
-  const [value, setValue] = useState('');
-  const inputRef = useRef<HTMLInputElement | null>(null); // Указываем тип
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
+  const [succes, setSuccess] = useState<IForgotAndResetPasswordResponse>();
+
+  const resetPassword = async (resetPasswordData: IResetPassword) => {
+    const response =
+      await UserAuthAPI.postResetPasswordRequest(resetPasswordData);
+    setSuccess(response);
+    return response;
+  };
+
+  useEffect(() => {
+    if (succes) {
+      navigate('/login');
+    }
+  }, [succes]);
 
   return (
     <>
@@ -18,18 +37,16 @@ function ResetPassword() {
         <Input
           type="text"
           placeholder="Введите новый пароль"
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-          ref={inputRef}
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
           size="default"
           extraClass="ml-1 mb-4"
         />
         <Input
           type="text"
           placeholder="Введите код из письма"
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-          ref={inputRef}
+          onChange={(e) => setToken(e.target.value)}
+          value={token}
           size="default"
           extraClass="ml-1 mb-4"
         />
@@ -38,7 +55,8 @@ function ResetPassword() {
           type="primary"
           size="medium"
           onClick={() => {
-            // navigate('/login');
+            console.log({ password, token });
+            resetPassword({ password, token });
           }}
         >
           Сохранить
