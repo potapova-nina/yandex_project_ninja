@@ -84,8 +84,6 @@ function BurgerIngredients() {
 
   return (
     <>
-      {/* <div>{user.name}</div>
-      <div>{user.email}</div> */}
       <div className={styles.burger_page}>
         <div className={styles.container_select_burger}>
           <p className="text text_type_main-large mb-5">Соберите бургер</p>

@@ -3,32 +3,22 @@ import {
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './reset-password.module.scss';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import UserAuthAPI from '../../../api/auth.api';
-import {
-  IForgotAndResetPasswordResponse,
-  IResetPassword,
-} from '../../../api/api.dto';
+import { IResetPassword } from '../../../api/api.dto';
+import { useNavigate } from 'react-router-dom';
 
 function ResetPassword() {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
-  const [succes, setSuccess] = useState<IForgotAndResetPasswordResponse>();
 
   const resetPassword = async (resetPasswordData: IResetPassword) => {
     const response =
       await UserAuthAPI.postResetPasswordRequest(resetPasswordData);
-    setSuccess(response);
+
     return response;
   };
-
-  useEffect(() => {
-    if (succes) {
-      navigate('/login');
-    }
-  }, [succes]);
 
   return (
     <>
@@ -55,8 +45,8 @@ function ResetPassword() {
           type="primary"
           size="medium"
           onClick={() => {
-            console.log({ password, token });
             resetPassword({ password, token });
+            navigate('/login');
           }}
         >
           Сохранить

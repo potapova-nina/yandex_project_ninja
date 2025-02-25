@@ -4,10 +4,8 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './profile.module.scss';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function Profile() {
-  const navigate = useNavigate();
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null); // Указываем тип
 

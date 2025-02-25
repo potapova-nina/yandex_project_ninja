@@ -4,14 +4,13 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './register.module.scss';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../services/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRegistration } from '../../services/register-slice';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
   const navigate = useNavigate();
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,9 +30,8 @@ function RegisterPage() {
       setName('');
       setEmail('');
       setPassword('');
-      navigate('/login');
     }
-  }, [success, navigate]); // Отслеживаем изменения success
+  }, [success]); // Отслеживаем изменения success
 
   const onClickRegistration = () => {
     dispatch(

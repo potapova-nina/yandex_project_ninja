@@ -6,50 +6,27 @@ import ForgotPassword from '../../pages/login/forgot-password/forgot-password';
 import ResetPassword from '../../pages/login/reset-password/reset-password';
 import RegisterPage from '../../pages/register/register';
 import Profile from '../../pages/profile/profile';
+import { OnlyAuth, OnlyUnAuth } from '../protected-route';
 
 export const AppRouter: FC = (): ReactElement => {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/profile" element={<Profile />} />
-
-      <Route path="/burgers" element={<BurgerIngredients />} />
+      <Route path="/login" element={<OnlyUnAuth component={<LoginPage />} />} />
+      <Route
+        path="/forgot-password"
+        element={<OnlyUnAuth component={<ForgotPassword />} />}
+      />
+      <Route
+        path="/reset-password"
+        element={<OnlyUnAuth component={<ResetPassword />} />}
+      />
+      <Route
+        path="/register"
+        element={<OnlyUnAuth component={<RegisterPage />} />}
+      />
+      <Route path="/profile" element={<OnlyAuth component={<Profile />} />} />
+      <Route path="/" element={<BurgerIngredients />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };
-
-// import { FC, ReactElement } from 'react';
-// import { Navigate, Route, Router, Routes } from 'react-router-dom';
-// import LoginPage from '../../components/login/login';
-
-// export const AppRouter: FC = (): ReactElement => {
-//   return (
-//     <Routes>
-//       {/* {auth ? (
-//         <>
-//           {filteredRoutes
-//             .filter((element) => element.path !== '/auth')
-//             .map(({ title, path, element }) => (
-//               <Route
-//                 key={title}
-//                 path={path}
-//                 element={<SuspenseRoute element={element} />}
-//               />
-//             ))}
-//           <Route path="*" element={<Navigate to="/main" />} />
-//         </>
-//       ) : ( */}
-
-//       <Route path="/login" element={<LoginPage />} />
-//       {/* <Route path="/forgot-password" element={</>} /> */}
-//       {/* <Route path="/reset-password" element={</>} /> */}
-//       {/* <Route path="/register" element={<FeedbackPageAsync />} /> */}
-
-//       <Route path="*" element={<Navigate to="/" />} />
-//     </Routes>
-//   );
-// };

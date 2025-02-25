@@ -18,7 +18,6 @@ const checkResponse = async <T>(response: Response): Promise<T> => {
   if (response.ok) {
     return response.json(); // Если всё ок, парсим JSON
   }
-
   // Если ошибка, парсим ответ и возвращаем Promise.reject
   const error = await response.json();
   return Promise.reject(error);
@@ -120,3 +119,6 @@ class UserAuthAPI {
 }
 
 export default new UserAuthAPI();
+function resolve(arg0: {}) {
+  throw new Error('Function not implemented.');
+}
