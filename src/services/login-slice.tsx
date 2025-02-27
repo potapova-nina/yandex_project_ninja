@@ -38,8 +38,7 @@ export const fetchLoginUser = createAsyncThunk(
     const response = await UserAuthAPI.postLoginRequest(loginData);
     localStorage.setItem('accessToken', response?.accessToken);
     localStorage.setItem('refreshToken', response?.refreshToken);
-    localStorage.setItem('name', response?.user.name);
-    localStorage.setItem('email', response?.user.email);
+
     return response;
   },
 );
@@ -53,8 +52,6 @@ export const loginSlice = createSlice({
     },
     setUser: (state, action: PayloadAction<ILoginResponse>) => {
       state.user = action.payload;
-      localStorage.setItem('email', action.payload.user.email);
-      localStorage.setItem('name', action.payload.user.name);
     },
   },
   extraReducers: (builder) => {

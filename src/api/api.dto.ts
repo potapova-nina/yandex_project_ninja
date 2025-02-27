@@ -55,3 +55,11 @@ export interface ILogoutResponse {
   success: boolean;
   message: string;
 }
+
+export interface IDataUserResponse {
+  success: boolean;
+  user: {
+    email: string;
+    name: string;
+  };
+}

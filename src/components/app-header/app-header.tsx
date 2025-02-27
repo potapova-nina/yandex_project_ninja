@@ -17,7 +17,7 @@ function AppHeader() {
           <p
             className="text text_type_main-default"
             onClick={() => {
-              navigate('/');
+              navigate('/ingredients');
             }}
           >
             Конструктор

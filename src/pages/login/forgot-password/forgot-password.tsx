@@ -13,9 +13,7 @@ function ForgotPassword() {
   const [succes, setSuccess] = useState<boolean>(false);
 
   const forgotPassword = async (emailData: string) => {
-    console.log(emailData, 'email for reset');
     const response = await UserAuthAPI.postForgotPasswordRequest(emailData);
-    console.log(response, 'response');
     setSuccess(response.success);
     return response;
   };

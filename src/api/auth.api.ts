@@ -1,5 +1,6 @@
 import {
   BASE_URL,
+  IDataUserResponse,
   IForgotAndResetPasswordResponse,
   ILoginData,
   ILoginResponse,
@@ -29,6 +30,7 @@ class UserAuthAPI {
   private postResetPassword: string;
   private postToken: string;
   private postLogout: string;
+  private getDataUser: string;
 
   constructor() {
     this.postRegister = '/auth/register'; //эндпоинт для регистрации пользователя.
@@ -37,6 +39,7 @@ class UserAuthAPI {
     this.postResetPassword = '/password-reset/reset'; //эндпоинт для авторизации.
     this.postToken = '/auth/token'; //эндпоинт обновления токена.
     this.postLogout = '/auth/logout'; //эндпоинт для выхода из системы.
+    this.getDataUser = '/auth/user'; //эндпоинт для получения данных о пользователе.
   }
 
   async postRegisterRequest(
@@ -114,6 +117,40 @@ class UserAuthAPI {
       },
       body: JSON.stringify({ token }),
     }).then((response) => checkResponse<ILogoutResponse>(response));
+  }
+  async getDataAboutUser(
+    token: string,
+  ): Promise<ApiResponse<IDataUserResponse>> {
+    const response = await fetch(BASE_URL + this.getDataUser, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    });
+
+    return checkResponse<IDataUserResponse>(response);
+  }
+
+  async updateDataAboutUser(
+    token: string,
+    data: {
+      name: string;
+      email: string;
+    },
+  ): Promise<ApiResponse<IDataUserResponse>> {
+    const response = await fetch(BASE_URL + this.getDataUser, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify({
+        ...data,
+      }), // Отправляем обновлённые данные
+    });
+
+    return checkResponse<IDataUserResponse>(response);
   }
 }
 

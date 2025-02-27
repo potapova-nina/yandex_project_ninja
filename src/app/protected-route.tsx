@@ -15,7 +15,6 @@ const Protected = ({
   const isAuthChecked = useSelector(getIsAuthChecked);
   const user = useSelector(getUser);
   const location = useLocation();
-  console.log('user:', user, 'isAuthChecked:', isAuthChecked);
 
   if (!isAuthChecked) {
     return <p>Загрузка...</p>;

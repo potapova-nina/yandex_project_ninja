@@ -26,11 +26,10 @@ export const AppRouter: FC = (): ReactElement => {
         element={<OnlyUnAuth component={<RegisterPage />} />}
       />
       <Route path="/profile" element={<OnlyAuth component={<Profile />} />} />
-      <Route path="/" element={<BurgerIngredients />} />
 
+      {/* Маршрут для ингредиентов с вложенным модальным окном */}
       <Route path="/ingredients" element={<BurgerIngredients />}>
-        {/* добавим роут для просмотра чата */}
-        {/* <Route path=":ingredientsId" element={<IngredientDetails />} /> */}
+        <Route path=":ingredientId" element={<IngredientDetails />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

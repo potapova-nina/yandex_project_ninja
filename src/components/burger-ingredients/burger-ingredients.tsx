@@ -12,8 +12,10 @@ import {
 } from '../../services/select-ingredients-slice';
 import DraggableIngredient from './draggable-ingredient/draggable-ingredient';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 function BurgerIngredients() {
+  const navigate = useNavigate();
   const [current, setCurrent] = useState<string>('one');
 
   const dispatch: AppDispatch = useDispatch();
@@ -24,10 +26,9 @@ function BurgerIngredients() {
     (state: RootState) => state.selectIngedient.selectedIngredient,
   );
 
-  const user = useSelector((state: RootState) => state.login.user);
-
   const handleIngredientClick = (ingredient: IBurgerIngredient) => {
     dispatch(selectIngedient(ingredient));
+    navigate(`/ingredients/${ingredient._id}`);
   };
 
   const handleCloseModal = () => {
@@ -160,10 +161,12 @@ function BurgerIngredients() {
       {selectedIngredient && (
         <>
           <Modal onClose={handleCloseModal} title="Детали ингредиента">
-            <IngredientDetails ingredient={selectedIngredient} />
+            <IngredientDetails />
           </Modal>
         </>
       )}
+
+      <Outlet />
     </>
   );
 }

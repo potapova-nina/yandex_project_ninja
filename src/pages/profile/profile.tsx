@@ -3,19 +3,22 @@ import {
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './profile.module.scss';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store';
 import { setUser } from '../../services/login-slice';
 import UserAuthAPI from '../../api/auth.api';
+import { string } from 'prop-types';
 
 function Profile() {
   const { user } = useSelector((state: RootState) => state.login);
   const dispatch: AppDispatch = useDispatch();
 
-  const [name, setName] = useState<string>(user.user.name);
-  const [email, setEmail] = useState<string>(user.user.email);
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const refreshToken = localStorage.getItem('refreshToken') || '';
+  const accessToken = localStorage.getItem('accessToken') || '';
 
   //для сброса
   const nameDefault = user.user.name;
@@ -25,8 +28,7 @@ function Profile() {
   const startEditUser = useRef<HTMLInputElement | null>(null); // Указываем тип
 
   const logoutUser = async () => {
-    const token = localStorage.getItem('refreshToken') || '';
-    const response = await UserAuthAPI.postLogoutRequest(token);
+    const response = await UserAuthAPI.postLogoutRequest(refreshToken);
     dispatch(
       setUser({
         success: false,
@@ -40,6 +42,26 @@ function Profile() {
 
     return response;
   };
+
+  const getUserInfo = async () => {
+    const response = await UserAuthAPI.getDataAboutUser(accessToken);
+    setName(response.user.name);
+    setEmail(response.user.email);
+    return response;
+  };
+  const updateUserInfo = async () => {
+    const data = {
+      name: name,
+      email: email,
+    };
+    const response = await UserAuthAPI.updateDataAboutUser(accessToken, data);
+    setName(response.user.name);
+    setEmail(response.user.email);
+    return response;
+  };
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const onClickEditUser = () => {
     setIsEdit(!isEdit);
@@ -62,6 +84,7 @@ function Profile() {
   };
 
   const saveUserData = () => {
+    updateUserInfo();
     dispatch(
       setUser({
         ...user,

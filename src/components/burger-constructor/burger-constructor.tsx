@@ -86,6 +86,7 @@ function BurgerConstructor() {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
       localStorage.removeItem('burgerConstructor');
+
       return;
     }
     // Если состояние уже заполнено или мы уже восстановили – ничего не делаем
