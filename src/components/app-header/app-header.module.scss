@@ -18,6 +18,10 @@
   align-items: center;
   gap: 8px;
   color: #f2f2f3;
+  &:hover {
+    color: rgb(110, 58, 155);
+    cursor: pointer; // Курсор в виде руки
+  }
 }
 
 .login {

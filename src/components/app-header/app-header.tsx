@@ -16,9 +16,9 @@ function AppHeader() {
           <BurgerIcon type="primary" />
           <p
             className="text text_type_main-default"
-            // onClick={() => {
-            //   navigate('/login');
-            // }}
+            onClick={() => {
+              navigate('/');
+            }}
           >
             Конструктор
           </p>
@@ -28,7 +28,7 @@ function AppHeader() {
           <p className="text text_type_main-default">Лента заказов</p>
         </div>
       </div>
-      <div className={styles.login}>
+      <div>
         <Logo />
       </div>
 

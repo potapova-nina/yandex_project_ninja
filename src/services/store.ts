@@ -1,4 +1,3 @@
-// services/store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import ingredientsReducer from './ingredients-slice';
 import constructorReducer from './constructor-slice';
