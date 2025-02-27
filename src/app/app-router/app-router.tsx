@@ -7,6 +7,7 @@ import ResetPassword from '../../pages/login/reset-password/reset-password';
 import RegisterPage from '../../pages/register/register';
 import Profile from '../../pages/profile/profile';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route';
+import IngredientDetails from '../../components/ingredient-details/ingredient-details';
 
 export const AppRouter: FC = (): ReactElement => {
   return (
@@ -26,6 +27,11 @@ export const AppRouter: FC = (): ReactElement => {
       />
       <Route path="/profile" element={<OnlyAuth component={<Profile />} />} />
       <Route path="/" element={<BurgerIngredients />} />
+
+      <Route path="/ingredients" element={<BurgerIngredients />}>
+        {/* добавим роут для просмотра чата */}
+        {/* <Route path=":ingredientsId" element={<IngredientDetails />} /> */}
+      </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

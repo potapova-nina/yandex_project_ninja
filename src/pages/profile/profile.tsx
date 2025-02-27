@@ -36,10 +36,7 @@ function Profile() {
       }),
     );
 
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('name');
-    localStorage.removeItem('email');
+    localStorage.clear();
 
     return response;
   };
