@@ -51,11 +51,6 @@ export interface IUpdateTokenResponse {
   refreshToken: string;
 }
 
-//чтобы не было путаницы
-export interface ILogoutData {
-  token: string; //"значение refreshToken"
-}
-
 export interface ILogoutResponse {
   success: boolean;
   message: string;

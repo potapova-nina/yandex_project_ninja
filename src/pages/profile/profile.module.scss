@@ -17,6 +17,10 @@
   margin-bottom: 20px;
   font-weight: bold;
   cursor: pointer;
+  &:hover {
+    color: rgb(255, 255, 255);
+    cursor: pointer; // Курсор в виде руки
+  }
 }
 
 .form {

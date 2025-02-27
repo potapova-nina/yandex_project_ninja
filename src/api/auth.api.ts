@@ -3,7 +3,6 @@ import {
   IForgotAndResetPasswordResponse,
   ILoginData,
   ILoginResponse,
-  ILogoutData,
   ILogoutResponse,
   IRegisterData,
   IRegisterResponse,
@@ -106,19 +105,16 @@ class UserAuthAPI {
   }
 
   async postLogoutRequest(
-    data: ILogoutData,
+    token: string, //refreshToken
   ): Promise<ApiResponse<ILogoutResponse>> {
     return fetch(BASE_URL + this.postLogout, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...data }),
+      body: JSON.stringify({ token }),
     }).then((response) => checkResponse<ILogoutResponse>(response));
   }
 }
 
 export default new UserAuthAPI();
-function resolve(arg0: {}) {
-  throw new Error('Function not implemented.');
-}
