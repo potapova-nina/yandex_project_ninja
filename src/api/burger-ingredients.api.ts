@@ -1,21 +1,15 @@
-import { IBurgerIngredient } from "../components/burger-ingredients/dto";
-import { BASE_URL } from "./api.dto";
+import { IBurgerIngredientResponse } from '../components/burger-ingredients/dto';
+import { BASE_URL } from './api.dto';
 
-type ApiResponse<T> = T extends { success: boolean }
-  ? T // Если T уже содержит success, просто используем T
-  : {
-      data: T; // Иначе добавляем data
-      success: boolean;
-    };
+type ApiResponse<T> = T;
 
-interface OrderResponse  {
+interface OrderResponse {
   name: string;
   order: {
     number: number;
   };
   success: boolean;
 }
-
 
 const checkResponse = async <T>(response: Response): Promise<T> => {
   if (response.ok) {
@@ -27,37 +21,36 @@ const checkResponse = async <T>(response: Response): Promise<T> => {
   return Promise.reject(error);
 };
 
-class IngredientService {
+class IngredientAPI {
   private getAllIngredientsURL: string;
   private createOrderURL: string;
 
-
-  constructor() { 
+  constructor() {
     this.getAllIngredientsURL = '/ingredients';
     this.createOrderURL = '/orders';
   }
-  
 
-  async getIngredients(): Promise<ApiResponse<IBurgerIngredient[]>> {
-    return fetch(BASE_URL+this.getAllIngredientsURL, {
+  //GET ALL INGREDIENTS
+  async getIngredients(): Promise<ApiResponse<IBurgerIngredientResponse>> {
+    return fetch(BASE_URL + this.getAllIngredientsURL, {
       method: 'GET',
-    }).then((response) => checkResponse<ApiResponse<IBurgerIngredient[]>>(response));
+    }).then((response) =>
+      checkResponse<ApiResponse<IBurgerIngredientResponse>>(response),
+    );
   }
 
-
-  async postCreateOrder(ingredients: string[]):Promise<ApiResponse<OrderResponse>>
-  {
-    return fetch(BASE_URL+this.createOrderURL, {
+  //POST CREATE ORDER
+  async postCreateOrder(
+    ingredients: string[],
+  ): Promise<ApiResponse<OrderResponse>> {
+    return fetch(BASE_URL + this.createOrderURL, {
       method: 'POST',
       headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ ingredients }), 
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ingredients }),
     }).then((response) => checkResponse<OrderResponse>(response));
-    
-  
-    
   }
 }
 
-export default new IngredientService();
+export default new IngredientAPI();
