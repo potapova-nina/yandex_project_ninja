@@ -14,22 +14,26 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const passwordHidden = useRef<HTMLInputElement | null>(null);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const dispatch: AppDispatch = useDispatch();
 
-  const onCkickPasswordHidden = () => {
+  const onClickPasswordToggle = () => {
+    setIsPasswordVisible((prev) => !prev); // Переключение состояния
     setTimeout(() => {
-      passwordHidden.current?.focus();
+      passwordHidden.current?.focus(); // Оставляем фокус на поле
     }, 0);
-    alert('Icon Click Callback');
   };
 
-  const onClickLogin = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     // Проверяем, чтобы не отправлять пустые данные
     if (!email || !password) {
       alert('Введите email и пароль');
       return;
     }
+
     dispatch(
       fetchLoginUser({
         email: email,
@@ -40,33 +44,31 @@ function LoginPage() {
 
   return (
     <div className={styles.login}>
-      <Input
-        type="text"
-        placeholder="E-mail"
-        onChange={(e) => setEmail(e.target.value)}
-        value={email}
-        size="default"
-        extraClass="ml-1 mb-4"
-      />
-      <Input
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-        icon="HideIcon"
-        placeholder="Пароль"
-        value={password}
-        ref={passwordHidden}
-        onIconClick={onCkickPasswordHidden}
-        size="default"
-        extraClass="ml-1 mb-4"
-      />
-      <Button
-        htmlType="button"
-        type="primary"
-        size="medium"
-        onClick={onClickLogin}
-      >
-        Войти
-      </Button>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <Input
+          type="text"
+          placeholder="E-mail"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          size="default"
+          extraClass="ml-1 mb-4"
+        />
+
+        <Input
+          type={isPasswordVisible ? 'text' : 'password'}
+          onChange={(e) => setPassword(e.target.value)}
+          icon={isPasswordVisible ? 'ShowIcon' : 'HideIcon'}
+          placeholder="Пароль"
+          value={password}
+          ref={passwordHidden}
+          onIconClick={onClickPasswordToggle}
+          size="default"
+          extraClass="ml-1 mb-4"
+        />
+        <Button htmlType="submit" type="primary" size="medium">
+          Войти
+        </Button>
+      </form>
       {/* Дополнительные ссылки */}
       <div className="mt-10">
         <div className={styles.text}>
@@ -82,7 +84,10 @@ function LoginPage() {
         </div>
         <div className={styles.text}>
           <p className="text text_type_main-default">Забыли пароль?</p>
-          <p className="text text_type_main-default text_color_inactive ml-3">
+          <p
+            className="text text_type_main-default text_color_inactive ml-3"
+            onClick={() => navigate('/forgot-password')}
+          >
             Восстановить пароль
           </p>
         </div>

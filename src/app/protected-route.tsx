@@ -22,7 +22,7 @@ const Protected = ({
 
   // Для страниц, доступных только для неавторизованных пользователей
   if (onlyUnAuth && user?.accessToken) {
-    const from = location.state?.from || { pathname: '/' };
+    const from = location.state?.from || { pathname: '/ingredients' };
     return <Navigate to={from} />;
   }
 

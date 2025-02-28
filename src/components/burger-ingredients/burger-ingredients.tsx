@@ -3,38 +3,32 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../services/store';
 import styles from './burder-ingredients.module.scss';
-import Modal from '../modal/modal';
-import IngredientDetails from '../ingredient-details/ingredient-details';
 import { IBurgerIngredient } from './dto';
-import {
-  clearSelectedIngredient,
-  selectIngedient,
-} from '../../services/select-ingredients-slice';
+import { selectIngedient } from '../../services/select-ingredients-slice';
 import DraggableIngredient from './draggable-ingredient/draggable-ingredient';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 function BurgerIngredients() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [current, setCurrent] = useState<string>('one');
 
   const dispatch: AppDispatch = useDispatch();
   const { list: dataIngredients } = useSelector(
     (state: RootState) => state.ingredients,
   );
-  const selectedIngredient = useSelector(
-    (state: RootState) => state.selectIngedient.selectedIngredient,
-  );
 
   const handleIngredientClick = (ingredient: IBurgerIngredient) => {
     dispatch(selectIngedient(ingredient));
-    navigate(`/ingredients/${ingredient._id}`);
+
+    // Передаём текущий location как background, чтобы знать, что нужно открыть модалку
+    navigate(`/ingredients/${ingredient._id}`, {
+      state: { background: location },
+    });
   };
 
-  const handleCloseModal = () => {
-    dispatch(clearSelectedIngredient());
-  };
-
+  // Логика переключения табов и скролла остается без изменений
   const bunsRef = useRef<HTMLDivElement>(null);
   const saucesRef = useRef<HTMLDivElement>(null);
   const fillingsRef = useRef<HTMLDivElement>(null);
@@ -158,14 +152,6 @@ function BurgerIngredients() {
         </div>
         <BurgerConstructor />
       </div>
-      {selectedIngredient && (
-        <>
-          <Modal onClose={handleCloseModal} title="Детали ингредиента">
-            <IngredientDetails />
-          </Modal>
-        </>
-      )}
-
       <Outlet />
     </>
   );

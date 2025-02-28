@@ -1,50 +1,61 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../../services/store';
 import styles from './ingredient-details.module.scss';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store';
+import { selectIngedient } from '../../services/select-ingredients-slice';
+
+// Если у вас есть асинхронный экшн для загрузки ингредиентов, его можно импортировать
+// import { fetchIngredients } from '../../services/ingredientsSlice';
 
 const IngredientDetails: React.FC = () => {
-  const selectedIngredient = useSelector(
-    (state: RootState) => state.selectIngedient.selectedIngredient,
+  const { ingredientId } = useParams<{ ingredientId: string }>();
+  const dispatch: AppDispatch = useDispatch();
+
+  // Берём список ингредиентов (предполагается, что он уже был загружен ранее)
+  const ingredientsList = useSelector(
+    (state: RootState) => state.ingredients.list,
   );
+
+  // Если в состоянии выбранного ингредиента его нет, ищем по id в списке ингредиентов
+  const ingredient =
+    ingredientsList.find((item) => item._id === ingredientId) || null;
+
+  useEffect(() => {
+    if (ingredient) {
+      dispatch(selectIngedient(ingredient));
+    }
+  }, [dispatch, ingredient]);
+
+  if (!ingredient) {
+    return <div>Ингредиент не найден</div>;
+  }
+
   return (
-    <>
-      <div className={styles.ingredientDetails}>
-        <img
-          src={selectedIngredient?.image_large}
-          alt={selectedIngredient?.name}
-        />
-        <p className="text text_type_main-medium mt-4">
-          {selectedIngredient?.name}
-        </p>
-        <div className={styles.nutrition}>
-          <div>
-            <p className="text text_type_main-default">Калории, ккал</p>
-            <p className="text text_type_digits-default">
-              {selectedIngredient?.calories}
-            </p>
-          </div>
-          <div>
-            <p className="text text_type_main-default">Белки, г</p>
-            <p className="text text_type_digits-default">
-              {selectedIngredient?.proteins}
-            </p>
-          </div>
-          <div>
-            <p className="text text_type_main-default">Жиры, г</p>
-            <p className="text text_type_digits-default">
-              {selectedIngredient?.fat}
-            </p>
-          </div>
-          <div>
-            <p className="text text_type_main-default">Углеводы, г</p>
-            <p className="text text_type_digits-default">
-              {selectedIngredient?.carbohydrates}
-            </p>
-          </div>
+    <div className={styles.ingredientDetails}>
+      <img src={ingredient.image_large} alt={ingredient.name} />
+      <p className="text text_type_main-medium mt-4">{ingredient.name}</p>
+      <div className={styles.nutrition}>
+        <div>
+          <p className="text text_type_main-default">Калории, ккал</p>
+          <p className="text text_type_digits-default">{ingredient.calories}</p>
+        </div>
+        <div>
+          <p className="text text_type_main-default">Белки, г</p>
+          <p className="text text_type_digits-default">{ingredient.proteins}</p>
+        </div>
+        <div>
+          <p className="text text_type_main-default">Жиры, г</p>
+          <p className="text text_type_digits-default">{ingredient.fat}</p>
+        </div>
+        <div>
+          <p className="text text_type_main-default">Углеводы, г</p>
+          <p className="text text_type_digits-default">
+            {ingredient.carbohydrates}
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
