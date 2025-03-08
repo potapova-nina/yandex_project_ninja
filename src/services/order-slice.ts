@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import ingredientService from '../api/burger-ingredients.api';
+import IngredientAPI from '../api/burger-ingredients.api';
 
 type OrderState = {
   orderNumber: number | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-
 };
 
 // Начальное состояние
@@ -17,12 +16,10 @@ const initialState: OrderState = {
 export const createOrder = createAsyncThunk(
   'order/create',
   async (ingredients: string[]) => {
- 
-      const response = await ingredientService.postCreateOrder( ingredients );
-      return response; // Вернёт { name, order: { number }, success }
+    const response = await IngredientAPI.postCreateOrder(ingredients);
 
-    
-  }
+    return response; // Вернёт { name, order: { number }, success }
+  },
 );
 
 // Создаём срез
@@ -36,11 +33,10 @@ const orderSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(createOrder.fulfilled, (state,action) => {
-        state.status = 'succeeded';
-        state.orderNumber = action.payload.order.number;   
-      })
-     
+    builder.addCase(createOrder.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.orderNumber = action.payload.order.number;
+    });
   },
 });
 
