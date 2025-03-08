@@ -9,7 +9,8 @@ import DraggableIngredient from './draggable-ingredient/draggable-ingredient';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
-//всем привет! мой проект уже был прослосью типизирован TS, не знаю, что пушить :)))
+//всем привет! мой проект уже был прослосью типизирован TS
+//не знаю, что пушить :)))
 
 function BurgerIngredients() {
   const navigate = useNavigate();
