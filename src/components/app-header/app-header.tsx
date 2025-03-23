@@ -23,7 +23,7 @@ function AppHeader() {
             Конструктор
           </p>
         </div>
-        <div className={styles.menuItem}>
+        <div className={styles.menuItem} onClick={() => navigate('/feed')}>
           <ListIcon type="secondary" />
           <p className="text text_type_main-default">Лента заказов</p>
         </div>

@@ -1,0 +1,78 @@
+.feed_main {
+  display: flex;
+  justify-content: center;
+  margin-right: 11vw;
+  gap: 3vw;
+  overflow: hidden;
+}
+
+.scrollable_column {
+  margin-top: 7vh;
+  width: 40vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  scroll-behavior: smooth;
+}
+
+.done {
+  display: flex;
+  text-align: left;
+  justify-content: space-between;
+  margin-top: 7vh;
+}
+
+.done_list {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  margin-bottom: 7vh;
+}
+
+.text_blue {
+  color: aqua;
+}
+
+.card {
+  background-color: #1c1c22;
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  color: white;
+  font-family: 'Courier New', monospace;
+  margin-right: 1vw;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ingredients {
+  display: flex;
+  gap: 8px;
+}
+
+.circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #222;
+  border: 2px solid aqua;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

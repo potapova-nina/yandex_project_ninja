@@ -9,6 +9,7 @@ import Profile from '../../pages/profile/profile';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route';
 import IngredientDetails from '../../components/ingredient-details/ingredient-details';
 import Modal from '../../components/modal/modal';
+import Feed from '../../components/feed/feed';
 
 export const AppRouter: FC = () => {
   const location = useLocation();
@@ -34,6 +35,7 @@ export const AppRouter: FC = () => {
           element={<OnlyUnAuth component={<RegisterPage />} />}
         />
         <Route path="/profile" element={<OnlyAuth component={<Profile />} />} />
+        <Route path="/feed" element={<OnlyAuth component={<Feed />} />} />
 
         {/* Главная страница ингредиентов */}
         <Route path="/ingredients" element={<BurgerIngredients />} />
