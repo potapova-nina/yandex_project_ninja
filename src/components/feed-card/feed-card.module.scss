@@ -1,0 +1,72 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 80vh;
+  width: 40vw;
+  margin-left: 25vw;
+  gap: 1vh;
+}
+
+.orderNumber {
+  display: flex;
+  justify-content: center;
+}
+
+.status {
+  color: #00ffff;
+}
+
+.ingredientList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.ingredient {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #1a1a1a;
+  border: 2px solid #a020f0;
+  flex-shrink: 0;
+}
+
+.name {
+  flex-grow: 1;
+  font-size: 14px;
+  text-align: left;
+  color: white;
+}
+
+.priceBlock {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ccc;
+  margin-top: 4vh;
+}
