@@ -36,7 +36,7 @@ export const AppRouter: FC = () => {
           element={<OnlyUnAuth component={<RegisterPage />} />}
         />
         <Route path="/profile" element={<OnlyAuth component={<Profile />} />} />
-        <Route path="/feed" element={<OnlyAuth component={<Feed />} />} />
+        <Route path="/feed" element={<Feed />} />
 
         <Route path="/feed/:orderId" element={<FeedCard />} />
 
@@ -63,6 +63,21 @@ export const AppRouter: FC = () => {
                 title="Детали ингредиента"
               >
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
+      {background && (
+        <Routes>
+          <Route
+            path="/feed/:orderId"
+            element={
+              <Modal
+                onClose={() => window.history.back()}
+                title="Детали заказа"
+              >
+                <FeedCard />
               </Modal>
             }
           />

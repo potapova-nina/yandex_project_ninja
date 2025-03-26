@@ -7,8 +7,8 @@ export interface OrderCardProps {
   name: string;
   time: string;
   price: number;
-  ingredients: (number | string)[];
   status: string;
+  ingredients: string[]; // массив URL'ов изображений
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({
@@ -33,8 +33,12 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
       <div className={styles.footer}>
         <div className={styles.ingredients}>
-          {ingredients.map((item, index) => (
-            <div key={index} className={styles.circle}></div>
+          {ingredients.slice(0, 6).map((url, index) => (
+            <div
+              key={index}
+              className={styles.circle}
+              style={{ backgroundImage: `url(${url})` }}
+            ></div>
           ))}
         </div>
         <div className={styles.price}>

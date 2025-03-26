@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styles from './feed.module.scss';
 import OrderCard from './order-card/order-card';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../services/store';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { setFeed } from '../../services/feed-slice';
 
 interface IOrder {
   ingredients: string[];
@@ -20,6 +24,10 @@ interface IWSResponse {
 }
 
 const Feed: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const ingredients = useSelector((state: RootState) => state.ingredients.list);
   const [wsOrders, setWsOrders] = useState<IOrder[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [totalToday, setTotalToday] = useState<number>(0);
@@ -29,6 +37,19 @@ const Feed: React.FC = () => {
       'wss://norma.nomoreparties.space/orders/all',
     );
 
+    // socket.onmessage = (event: MessageEvent) => {
+    //   try {
+    //     const data: IWSResponse = JSON.parse(event.data);
+    //     if (data.success) {
+    //       setWsOrders(data.orders);
+    //       setTotal(data.total);
+    //       setTotalToday(data.totalToday);
+    //     }
+    //     console.log(data.orders);
+    //   } catch (error) {
+    //     console.error('Ошибка при обработке сообщения WebSocket:', error);
+    //   }
+    // };
     socket.onmessage = (event: MessageEvent) => {
       try {
         const data: IWSResponse = JSON.parse(event.data);
@@ -36,13 +57,12 @@ const Feed: React.FC = () => {
           setWsOrders(data.orders);
           setTotal(data.total);
           setTotalToday(data.totalToday);
+          dispatch(setFeed(data)); // сохраняем в redux
         }
-        console.log(data.orders);
       } catch (error) {
         console.error('Ошибка при обработке сообщения WebSocket:', error);
       }
     };
-
     socket.onerror = (error: Event) => {
       console.error('Ошибка WebSocket:', error);
     };
@@ -66,21 +86,48 @@ const Feed: React.FC = () => {
   const doneColumn1 = visibleDoneOrders.slice(0, 7);
   const doneColumn2 = visibleDoneOrders.slice(7, 14);
 
+  const getPriceAndImages = (ingredientIds: string[]) => {
+    const orderIngredients = ingredientIds
+      .map((id) => ingredients.find((item) => item._id === id))
+      .filter(Boolean); // убираем undefined, если не нашлось
+
+    const totalPrice = orderIngredients.reduce(
+      (sum, item) => sum + (item!.price || 0),
+      0,
+    );
+
+    const images = orderIngredients.map((item) => item!.image);
+
+    return { totalPrice, images };
+  };
+
   return (
     <div className={styles.feed_main}>
       <div className={styles.scrollable_column}>
-        {wsOrders.map((order) => (
-          // Преобразуем данные из wsOrders в структуру, ожидаемую OrderCard
-          <OrderCard
-            key={order._id}
-            number={order.number}
-            name={order.name}
-            time={new Date(order.createdAt).toLocaleString()}
-            price={0} // Цена отсутствует в ws-ответе, можно заменить на актуальное значение
-            ingredients={order.ingredients}
-            status={order.status}
-          />
-        ))}
+        {wsOrders.map((order) => {
+          const { totalPrice, images } = getPriceAndImages(order.ingredients);
+
+          return (
+            <div
+              key={order._id}
+              onClick={() => {
+                navigate(`/feed/${order._id}`, {
+                  state: { background: location },
+                });
+              }}
+            >
+              <OrderCard
+                key={order._id}
+                number={order.number}
+                name={order.name}
+                time={new Date(order.createdAt).toLocaleString()}
+                price={totalPrice}
+                ingredients={images}
+                status={order.status}
+              />
+            </div>
+          );
+        })}
       </div>
 
       <div>
