@@ -24,13 +24,15 @@
   margin-top: 7vh;
 }
 
+.done_columns {
+  display: flex;
+  gap: 1vw;
+  color: aqua;
+}
+
 .done_list {
   display: flex;
   flex-direction: column;
   gap: 1vh;
   margin-bottom: 7vh;
-}
-
-.text_blue {
-  color: aqua;
 }

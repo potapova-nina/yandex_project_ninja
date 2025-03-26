@@ -1,82 +1,136 @@
+import React, { useEffect, useState } from 'react';
 import styles from './feed.module.scss';
 import OrderCard from './order-card/order-card';
 
-const orders = [
-  {
-    id: '034535',
-    name: 'Death Star Starship Main бургер',
-    time: 'Сегодня, 16:20',
-    price: 480,
-    ingredients: [1, 2, 3, 4, 5, 6],
-  },
-  {
-    id: '034534',
-    name: 'Interstellar бургер',
-    time: 'Сегодня, 13:20',
-    price: 560,
-    ingredients: [1, 2, 3, 4, 5, '...'],
-  },
-  {
-    id: '034533',
-    name: 'Black Hole Singularity острый бургер',
-    time: 'Вчера, 13:50',
-    price: 510,
-    ingredients: [1, 2, 3, 4],
-  },
-  {
-    id: '034532',
-    name: 'Supernova Infinity бургер',
-    time: '2 дня назад, 21:53',
-    price: 370,
-    ingredients: [1, 2, 3],
-  },
-  {
-    id: '034531',
-    name: 'Cosmic Melt бургер',
-    time: 'Сегодня, 11:12',
-    price: 490,
-    ingredients: [1, 2, 3, 4, 5, 6],
-  },
-  {
-    id: '034530',
-    name: 'Galaxy Flame бургер',
-    time: 'Сегодня, 09:42',
-    price: 520,
-    ingredients: [1, 2, 3, 4, 5],
-  },
-];
+interface IOrder {
+  ingredients: string[];
+  _id: string;
+  status: string;
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+}
 
-const Feed = () => {
+interface IWSResponse {
+  success: boolean;
+  orders: IOrder[];
+  total: number;
+  totalToday: number;
+}
+
+const Feed: React.FC = () => {
+  const [wsOrders, setWsOrders] = useState<IOrder[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [totalToday, setTotalToday] = useState<number>(0);
+
+  useEffect(() => {
+    const socket: WebSocket = new WebSocket(
+      'wss://norma.nomoreparties.space/orders/all',
+    );
+
+    socket.onmessage = (event: MessageEvent) => {
+      try {
+        const data: IWSResponse = JSON.parse(event.data);
+        if (data.success) {
+          setWsOrders(data.orders);
+          setTotal(data.total);
+          setTotalToday(data.totalToday);
+        }
+        console.log(data.orders);
+      } catch (error) {
+        console.error('Ошибка при обработке сообщения WebSocket:', error);
+      }
+    };
+
+    socket.onerror = (error: Event) => {
+      console.error('Ошибка WebSocket:', error);
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  // Фильтруем заказы по статусу
+  const doneOrders: IOrder[] = wsOrders.filter(
+    (order) => order.status === 'done',
+  );
+  const inProgressOrders: IOrder[] = wsOrders.filter(
+    (order) => order.status !== 'done',
+  );
+
+  // Для колонки "Готово" берем максимум 14 заказов
+  const visibleDoneOrders = doneOrders.slice(0, 14);
+  // Разбиваем на 2 колонки по 7 записей
+  const doneColumn1 = visibleDoneOrders.slice(0, 7);
+  const doneColumn2 = visibleDoneOrders.slice(7, 14);
+
   return (
     <div className={styles.feed_main}>
       <div className={styles.scrollable_column}>
-        {orders.map((order) => (
-          <OrderCard key={order.id} {...order} />
+        {wsOrders.map((order) => (
+          // Преобразуем данные из wsOrders в структуру, ожидаемую OrderCard
+          <OrderCard
+            key={order._id}
+            number={order.number}
+            name={order.name}
+            time={new Date(order.createdAt).toLocaleString()}
+            price={0} // Цена отсутствует в ws-ответе, можно заменить на актуальное значение
+            ingredients={order.ingredients}
+            status={order.status}
+          />
         ))}
       </div>
 
       <div>
         <div className={styles.done}>
-          <div className={styles.done_list}>
+          <div>
             <p className="text text_type_main-medium mb-3">Готовы:</p>
-            <div className={styles.text_blue}>
-              <p className="text text_type_digits-default">28732</p>
-              <p className="text text_type_digits-default">12872</p>
+            <div className={styles.done_columns}>
+              <div className={styles.done_list}>
+                {doneColumn1.map((order) => (
+                  <p
+                    key={order._id}
+                    className="text text_type_digits-default text_blue"
+                  >
+                    {order.number}
+                  </p>
+                ))}
+              </div>
+              <div className={styles.done_list}>
+                {doneColumn2.map((order) => (
+                  <p
+                    key={order._id}
+                    className="text text_type_digits-default text_blue"
+                  >
+                    {order.number}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
-          <div className={styles.done_list}>
+
+          <div>
             <p className="text text_type_main-medium mb-3">В работе:</p>
-            <p className="text text_type_digits-default">72369</p>
-            <p className="text text_type_digits-default">28732</p>
-            <p className="text text_type_digits-default">12872</p>
+            <div className={styles.done_columns}>
+              {inProgressOrders.map((order) => (
+                <p key={order._id} className="text text_type_digits-default">
+                  {order.number}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
+
         <p className="text text_type_main-medium">Выполнено за все время:</p>
         <p className="text text_type_digits-large text_color_inactive">
-          28 752
+          {total}
         </p>
         <p className="text text_type_main-medium">Выполнено за сегодня:</p>
-        <p className="text text_type_digits-large text_color_inactive">138</p>
+        <p className="text text_type_digits-large text_color_inactive">
+          {totalToday}
+        </p>
       </div>
     </div>
   );
