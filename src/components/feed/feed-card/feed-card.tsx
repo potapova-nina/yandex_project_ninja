@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './feed-card.module.scss';
-import { IBurgerIngredient } from '../burger-ingredients/dto';
 import { useLocation } from 'react-router-dom';
+import { RootState } from '../../../services/store';
+import { IBurgerIngredient } from '../../burger-ingredients/dto';
 
 interface IBurgerIngredientWithQuantity extends IBurgerIngredient {
   quantity: number;

@@ -98,7 +98,6 @@ const Feed: React.FC = () => {
             <div
               key={order._id}
               onClick={() => {
-                // navigate(`/feed/${order._id}`, {
                 navigate(`/feed/${order.number}`, {
                   state: { background: location },
                 });
