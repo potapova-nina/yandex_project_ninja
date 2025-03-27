@@ -1,11 +1,9 @@
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 80vh;
-  width: 40vw;
-  margin-left: 25vw;
-  gap: 1vh;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .orderNumber {
@@ -14,6 +12,7 @@
 }
 
 .status {
+  text-align: center;
   color: #00ffff;
 }
 
@@ -21,10 +20,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 250px; // регулируется под размер модалки
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
+  gap: 12px;
+  scrollbar-width: thin;
 }
 
 .ingredient {
@@ -39,14 +40,19 @@
   border-radius: 50%;
   background-color: #1a1a1a;
   border: 2px solid #a020f0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   flex-shrink: 0;
 }
 
 .name {
   flex-grow: 1;
   font-size: 14px;
-  text-align: left;
   color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .priceBlock {
@@ -60,7 +66,7 @@
 .price {
   display: flex;
   align-items: center;
-  gap: 0.5vw;
+  gap: 8px;
 }
 
 .footer {
@@ -68,5 +74,24 @@
   justify-content: space-between;
   align-items: center;
   color: #ccc;
-  margin-top: 4vh;
+  margin-top: 16px;
+}
+.pageContainer {
+  display: flex;
+  justify-content: center;
+  padding: 5vh 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+
+  // по центру и с ограничением ширины, если это отдельная страница
+  &.centered {
+    max-width: 500px;
+    width: 90%;
+  }
 }

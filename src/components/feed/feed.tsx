@@ -37,19 +37,6 @@ const Feed: React.FC = () => {
       'wss://norma.nomoreparties.space/orders/all',
     );
 
-    // socket.onmessage = (event: MessageEvent) => {
-    //   try {
-    //     const data: IWSResponse = JSON.parse(event.data);
-    //     if (data.success) {
-    //       setWsOrders(data.orders);
-    //       setTotal(data.total);
-    //       setTotalToday(data.totalToday);
-    //     }
-    //     console.log(data.orders);
-    //   } catch (error) {
-    //     console.error('Ошибка при обработке сообщения WebSocket:', error);
-    //   }
-    // };
     socket.onmessage = (event: MessageEvent) => {
       try {
         const data: IWSResponse = JSON.parse(event.data);
@@ -111,7 +98,8 @@ const Feed: React.FC = () => {
             <div
               key={order._id}
               onClick={() => {
-                navigate(`/feed/${order._id}`, {
+                // navigate(`/feed/${order._id}`, {
+                navigate(`/feed/${order.number}`, {
                   state: { background: location },
                 });
               }}
