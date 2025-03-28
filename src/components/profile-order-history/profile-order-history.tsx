@@ -65,10 +65,9 @@ const ProfileOrderHistory: React.FC = () => {
     socket.onmessage = (event: MessageEvent) => {
       try {
         const data: IWSResponse = JSON.parse(event.data);
-        console.log('data', data, data.orders);
+
         if (data.success) {
           setWsOrders(data.orders);
-          console.log('suc_data', data.orders);
         }
       } catch (error) {
         console.error('Ошибка при обработке сообщения WebSocket:', error);
@@ -108,7 +107,7 @@ const ProfileOrderHistory: React.FC = () => {
             <div
               key={order._id}
               onClick={() => {
-                navigate(`/feed/${order.number}`, {
+                navigate(`/profile/orders/${order.number}`, {
                   state: { background: location },
                 });
               }}
