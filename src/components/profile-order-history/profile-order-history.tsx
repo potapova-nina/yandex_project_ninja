@@ -29,16 +29,46 @@ const ProfileOrderHistory: React.FC = () => {
   const ingredients = useSelector((state: RootState) => state.ingredients.list);
   const [wsOrders, setWsOrders] = useState<IOrder[]>([]);
 
+  const refreshAccessToken = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return null;
+
+    const response = await fetch(
+      'https://norma.nomoreparties.space/api/auth/token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: refreshToken }),
+      },
+    );
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+
+    return data.accessToken;
+  };
+
   useEffect(() => {
+    refreshAccessToken();
+    const accessToken = localStorage
+      .getItem('accessToken')
+      ?.replace('Bearer ', '');
     const socket: WebSocket = new WebSocket(
-      'wss://norma.nomoreparties.space/orders',
+      `wss://norma.nomoreparties.space/orders?token=${accessToken}`,
     );
 
     socket.onmessage = (event: MessageEvent) => {
       try {
         const data: IWSResponse = JSON.parse(event.data);
+        console.log('data', data, data.orders);
         if (data.success) {
           setWsOrders(data.orders);
+          console.log('suc_data', data.orders);
         }
       } catch (error) {
         console.error('Ошибка при обработке сообщения WebSocket:', error);
