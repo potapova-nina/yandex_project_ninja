@@ -43,10 +43,13 @@ class IngredientAPI {
   async postCreateOrder(
     ingredients: string[],
   ): Promise<ApiResponse<OrderResponse>> {
+    const accessToken = localStorage.getItem('accessToken');
+
     return fetch(BASE_URL + this.createOrderURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: accessToken!,
       },
       body: JSON.stringify({ ingredients }),
     }).then((response) => checkResponse<OrderResponse>(response));

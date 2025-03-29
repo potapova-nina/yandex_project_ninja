@@ -17,7 +17,7 @@ export const createOrder = createAsyncThunk(
   'order/create',
   async (ingredients: string[]) => {
     const response = await IngredientAPI.postCreateOrder(ingredients);
-
+    console.log(response, 'order');
     return response; // Вернёт { name, order: { number }, success }
   },
 );

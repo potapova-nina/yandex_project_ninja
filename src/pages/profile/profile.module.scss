@@ -11,6 +11,9 @@
   flex-direction: column;
   align-items: flex-start;
   width: 15vw;
+  position: sticky;
+  top: 15vh; // или сколько нужно
+  height: fit-content;
 }
 
 .menu p {

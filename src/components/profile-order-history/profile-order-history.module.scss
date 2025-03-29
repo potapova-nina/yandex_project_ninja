@@ -1,0 +1,17 @@
+.order_history_main {
+  display: flex;
+  justify-content: center;
+  margin-right: 11vw;
+  gap: 3vw;
+  overflow: hidden;
+}
+
+.scrollable_column {
+  width: 40vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  scroll-behavior: smooth;
+}
