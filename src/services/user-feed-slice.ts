@@ -10,51 +10,50 @@ interface IOrder {
   name: string;
 }
 
-interface FeedState {
+interface UserFeedState {
   orders: IOrder[];
-  total: number;
-  totalToday: number;
   wsConnected: boolean;
   error: Event | null;
 }
 
-const initialState: FeedState = {
+const initialState: UserFeedState = {
   orders: [],
-  total: 0,
-  totalToday: 0,
   wsConnected: false,
   error: null,
 };
 
-const feedSlice = createSlice({
-  name: 'feed',
+const userFeedSlice = createSlice({
+  name: 'userFeed',
   initialState,
   reducers: {
-    wsInit: (_, action: PayloadAction<string>) => {},
-    wsClose: () => {},
-
-    onOpen: (state) => {
+    wsUserInit: (_, action: PayloadAction<string>) => {},
+    wsUserClose: () => {},
+    wsUserOpen: (state) => {
       state.wsConnected = true;
       state.error = null;
     },
-    onError: (state, action: PayloadAction<Event>) => {
+    wsUserError: (state, action: PayloadAction<Event>) => {
       state.error = action.payload;
     },
-    onClose: (state) => {
+    wsUserClosed: (state) => {
       state.wsConnected = false;
     },
-    onMessage: (state, action: PayloadAction<string>) => {
+    wsUserMessage: (state, action: PayloadAction<string>) => {
       const data = JSON.parse(action.payload);
       if (data.success) {
         state.orders = data.orders;
-        state.total = data.total;
-        state.totalToday = data.totalToday;
       }
     },
   },
 });
 
-export const { wsInit, wsClose, onOpen, onError, onClose, onMessage } =
-  feedSlice.actions;
+export const {
+  wsUserInit,
+  wsUserClose,
+  wsUserOpen,
+  wsUserError,
+  wsUserClosed,
+  wsUserMessage,
+} = userFeedSlice.actions;
 
-export default feedSlice.reducer;
+export default userFeedSlice.reducer;

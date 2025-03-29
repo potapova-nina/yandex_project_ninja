@@ -1,91 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from './profile-order-history.module.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../services/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderCard from '../feed/order-card/order-card';
-
-interface IOrder {
-  ingredients: string[];
-  _id: string;
-  status: string;
-  number: number;
-  createdAt: string;
-  updatedAt: string;
-  name: string;
-}
-
-interface IWSResponse {
-  success: boolean;
-  orders: IOrder[];
-  total: number;
-  totalToday: number;
-}
+import { wsUserInit, wsUserClose } from '../../services/user-feed-slice';
 
 const ProfileOrderHistory: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
   const ingredients = useSelector((state: RootState) => state.ingredients.list);
-  const [wsOrders, setWsOrders] = useState<IOrder[]>([]);
-
-  const refreshAccessToken = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) return null;
-
-    const response = await fetch(
-      'https://norma.nomoreparties.space/api/auth/token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: refreshToken }),
-      },
-    );
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-
-    return data.accessToken;
-  };
+  const orders = useSelector((state: RootState) => state.userFeed.orders);
 
   useEffect(() => {
-    refreshAccessToken();
-    const accessToken = localStorage
-      .getItem('accessToken')
-      ?.replace('Bearer ', '');
-    const socket: WebSocket = new WebSocket(
-      `wss://norma.nomoreparties.space/orders?token=${accessToken}`,
-    );
-
-    socket.onmessage = (event: MessageEvent) => {
-      try {
-        const data: IWSResponse = JSON.parse(event.data);
-
-        if (data.success) {
-          setWsOrders(data.orders);
-        }
-      } catch (error) {
-        console.error('Ошибка при обработке сообщения WebSocket:', error);
-      }
-    };
-    socket.onerror = (error: Event) => {
-      console.error('Ошибка WebSocket:', error);
-    };
+    const token = localStorage.getItem('accessToken')?.replace('Bearer ', '');
+    if (token) {
+      dispatch(
+        wsUserInit(`wss://norma.nomoreparties.space/orders?token=${token}`),
+      );
+    }
 
     return () => {
-      socket.close();
+      dispatch(wsUserClose());
     };
-  }, []);
+  }, [dispatch]);
 
   const getPriceAndImages = (ingredientIds: string[]) => {
     const orderIngredients = ingredientIds
       .map((id) => ingredients.find((item) => item._id === id))
-      .filter(Boolean); // убираем undefined, если не нашлось
+      .filter(Boolean);
 
     const totalPrice = orderIngredients.reduce(
       (sum, item) => sum + (item!.price || 0),
@@ -100,7 +45,7 @@ const ProfileOrderHistory: React.FC = () => {
   return (
     <div className={styles.order_history_main}>
       <div className={styles.scrollable_column}>
-        {wsOrders.map((order) => {
+        {orders.map((order: any) => {
           const { totalPrice, images } = getPriceAndImages(order.ingredients);
 
           return (
@@ -113,7 +58,6 @@ const ProfileOrderHistory: React.FC = () => {
               }}
             >
               <OrderCard
-                key={order._id}
                 number={order.number}
                 name={order.name}
                 time={new Date(order.createdAt).toLocaleString()}

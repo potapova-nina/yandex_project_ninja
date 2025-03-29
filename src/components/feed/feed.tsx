@@ -1,82 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from './feed.module.scss';
 import OrderCard from './order-card/order-card';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../services/store';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { setFeed } from '../../services/feed-slice';
-
-interface IOrder {
-  ingredients: string[];
-  _id: string;
-  status: string;
-  number: number;
-  createdAt: string;
-  updatedAt: string;
-  name: string;
-}
-
-interface IWSResponse {
-  success: boolean;
-  orders: IOrder[];
-  total: number;
-  totalToday: number;
-}
+import { wsInit, wsClose } from '../../services/feed-slice';
 
 const Feed: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { orders, total, totalToday } = useSelector(
+    (state: RootState) => state.feedOrder,
+  );
   const ingredients = useSelector((state: RootState) => state.ingredients.list);
-  const [wsOrders, setWsOrders] = useState<IOrder[]>([]);
-  const [total, setTotal] = useState<number>(0);
-  const [totalToday, setTotalToday] = useState<number>(0);
 
   useEffect(() => {
-    const socket: WebSocket = new WebSocket(
-      'wss://norma.nomoreparties.space/orders/all',
-    );
-
-    socket.onmessage = (event: MessageEvent) => {
-      try {
-        const data: IWSResponse = JSON.parse(event.data);
-        if (data.success) {
-          setWsOrders(data.orders);
-          setTotal(data.total);
-          setTotalToday(data.totalToday);
-          dispatch(setFeed(data)); // сохраняем в redux
-        }
-      } catch (error) {
-        console.error('Ошибка при обработке сообщения WebSocket:', error);
-      }
-    };
-    socket.onerror = (error: Event) => {
-      console.error('Ошибка WebSocket:', error);
-    };
+    dispatch(wsInit('wss://norma.nomoreparties.space/orders/all'));
 
     return () => {
-      socket.close();
+      dispatch(wsClose());
     };
-  }, []);
+  }, [dispatch]);
 
-  // Фильтруем заказы по статусу
-  const doneOrders: IOrder[] = wsOrders.filter(
-    (order) => order.status === 'done',
-  );
-  const inProgressOrders: IOrder[] = wsOrders.filter(
-    (order) => order.status !== 'done',
-  );
+  const doneOrders = orders.filter((order) => order.status === 'done');
+  const inProgressOrders = orders.filter((order) => order.status !== 'done');
 
-  // Для колонки "Готово" берем максимум 14 заказов
   const visibleDoneOrders = doneOrders.slice(0, 14);
-  // Разбиваем на 2 колонки по 7 записей
   const doneColumn1 = visibleDoneOrders.slice(0, 7);
   const doneColumn2 = visibleDoneOrders.slice(7, 14);
 
   const getPriceAndImages = (ingredientIds: string[]) => {
     const orderIngredients = ingredientIds
       .map((id) => ingredients.find((item) => item._id === id))
-      .filter(Boolean); // убираем undefined, если не нашлось
+      .filter(Boolean);
 
     const totalPrice = orderIngredients.reduce(
       (sum, item) => sum + (item!.price || 0),
@@ -91,7 +49,7 @@ const Feed: React.FC = () => {
   return (
     <div className={styles.feed_main}>
       <div className={styles.scrollable_column}>
-        {wsOrders.map((order) => {
+        {orders.map((order) => {
           const { totalPrice, images } = getPriceAndImages(order.ingredients);
 
           return (
