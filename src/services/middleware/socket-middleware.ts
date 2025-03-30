@@ -1,3 +1,6 @@
+import { Dispatch } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+
 interface SocketActions {
   wsInit: string;
   wsClose: string;
@@ -7,11 +10,23 @@ interface SocketActions {
   onMessage: string;
 }
 
+interface IAction {
+  payload: string;
+  type: string;
+}
+
+interface IStore {
+  dispatch: Dispatch;
+  getState: () => RootState;
+}
+
+type TNext = (action: IAction) => void;
+
 export const createSocketMiddleware = (wsActions: SocketActions) => {
-  return (store: any) => {
+  return (store: IStore) => {
     let socket: WebSocket | null = null;
 
-    return (next: any) => (action: any) => {
+    return (next: TNext) => (action: IAction) => {
       const { dispatch } = store;
       const { wsInit, wsClose, onOpen, onClose, onError, onMessage } =
         wsActions;

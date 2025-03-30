@@ -5,6 +5,15 @@ import { RootState } from '../../services/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderCard from '../feed/order-card/order-card';
 import { wsUserInit, wsUserClose } from '../../services/user-feed-slice';
+interface IOrder {
+  ingredients: string[];
+  _id: string;
+  status: string;
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+}
 
 const ProfileOrderHistory: React.FC = () => {
   const dispatch = useDispatch();
@@ -45,7 +54,7 @@ const ProfileOrderHistory: React.FC = () => {
   return (
     <div className={styles.order_history_main}>
       <div className={styles.scrollable_column}>
-        {orders.map((order: any) => {
+        {orders.map((order: IOrder) => {
           const { totalPrice, images } = getPriceAndImages(order.ingredients);
 
           return (
