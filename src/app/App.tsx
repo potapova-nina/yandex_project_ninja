@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { useEffect } from 'react';
 import { AppDispatch, RootState } from '../services/store';
 import { fetchIngredients } from '../services/ingredients-slice';
@@ -7,8 +7,8 @@ import { AppRouter } from './app-router/app-router';
 import { BrowserRouter } from 'react-router-dom';
 
 function App() {
-  const dispatch: AppDispatch = useDispatch();
-  const { status } = useSelector((state: RootState) => state.ingredients);
+  const dispatch: AppDispatch = useAppDispatch();
+  const { status } = useAppSelector((state: RootState) => state.ingredients);
 
   useEffect(() => {
     if (status === 'idle') {

@@ -5,9 +5,9 @@ import {
 import styles from './login.module.scss';
 import { useRef, useState } from 'react';
 import { AppDispatch } from '../../services/store';
-import { useDispatch } from 'react-redux';
 import { fetchLoginUser } from '../../services/login-slice';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function LoginPage() {
   const passwordHidden = useRef<HTMLInputElement | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
 
   const onClickPasswordToggle = () => {
     setIsPasswordVisible((prev) => !prev); // Переключение состояния

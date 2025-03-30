@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import styles from './profile-order-history.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../services/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderCard from '../feed/order-card/order-card';
 import { wsUserInit, wsUserClose } from '../../services/user-feed-slice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 interface IOrder {
   ingredients: string[];
   _id: string;
@@ -16,12 +16,14 @@ interface IOrder {
 }
 
 const ProfileOrderHistory: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const ingredients = useSelector((state: RootState) => state.ingredients.list);
-  const orders = useSelector((state: RootState) => state.userFeed.orders);
+  const ingredients = useAppSelector(
+    (state: RootState) => state.ingredients.list,
+  );
+  const orders = useAppSelector((state: RootState) => state.userFeed.orders);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken')?.replace('Bearer ', '');

@@ -1,20 +1,22 @@
 import React, { useEffect } from 'react';
 import styles from './feed.module.scss';
 import OrderCard from './order-card/order-card';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../services/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { wsInit, wsClose } from '../../services/feed-slice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 const Feed: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { orders, total, totalToday } = useSelector(
+  const { orders, total, totalToday } = useAppSelector(
     (state: RootState) => state.feedOrder,
   );
-  const ingredients = useSelector((state: RootState) => state.ingredients.list);
+  const ingredients = useAppSelector(
+    (state: RootState) => state.ingredients.list,
+  );
 
   useEffect(() => {
     dispatch(wsInit('wss://norma.nomoreparties.space/orders/all'));

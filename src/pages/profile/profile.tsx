@@ -4,17 +4,17 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './profile.module.scss';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store';
 import { setUser } from '../../services/login-slice';
 import UserAuthAPI from '../../api/auth.api';
 import ProfileOrderHistory from '../../components/profile-order-history/profile-order-history';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 type TabType = 'profile' | 'orders';
 
 function Profile() {
-  const { user } = useSelector((state: RootState) => state.login);
-  const dispatch: AppDispatch = useDispatch();
+  const { user } = useAppSelector((state: RootState) => state.login);
+  const dispatch: AppDispatch = useAppDispatch();
 
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const [name, setName] = useState<string>('');

@@ -5,7 +5,7 @@ import {
   ConstructorElement,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../burger-constructor.module.scss';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../../app/hooks';
 import {
   ConstructorIngredient,
   moveIngredient,
@@ -21,7 +21,7 @@ const SortableIngredient: React.FC<SortableIngredientProps> = ({
   ingredient,
   index,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({

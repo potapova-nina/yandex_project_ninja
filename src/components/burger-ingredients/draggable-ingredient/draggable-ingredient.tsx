@@ -1,35 +1,40 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import styles from "./draggable-ingredient.module.scss";
-import { useSelector } from 'react-redux';
+import styles from './draggable-ingredient.module.scss';
 import { IBurgerIngredient } from '../dto';
 import IngredientsItems from '../ingredient-items/ingredient-items';
 import { RootState } from '../../../services/store';
-
+import { useAppSelector } from '../../../app/hooks';
 
 interface DraggableIngredientProps {
   ingredient: IBurgerIngredient;
   onClick: (ingredient: IBurgerIngredient) => void;
 }
 
-const DraggableIngredient: React.FC<DraggableIngredientProps> = ({ ingredient, onClick }) => {
+const DraggableIngredient: React.FC<DraggableIngredientProps> = ({
+  ingredient,
+  onClick,
+}) => {
   // Получаем из Redux данные конструктора
-  const { bun, ingredients } = useSelector((state: RootState) => state.constructor);
+  const { bun, ingredients } = useAppSelector(
+    (state: RootState) => state.constructor,
+  );
 
   let count = 0;
-  if (ingredient.type === "bun") {
+  if (ingredient.type === 'bun') {
     if (bun && bun._id === ingredient._id) {
       count = 2;
     }
   } else {
-    
-    if (ingredients){
-    count = ingredients.filter((item: IBurgerIngredient) => item._id === ingredient._id).length;}
+    if (ingredients) {
+      count = ingredients.filter(
+        (item: IBurgerIngredient) => item._id === ingredient._id,
+      ).length;
+    }
   }
 
-  
   const [{ isDragging }, dragRef] = useDrag({
-    type: "ingredient",
+    type: 'ingredient',
     item: ingredient,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -39,10 +44,10 @@ const DraggableIngredient: React.FC<DraggableIngredientProps> = ({ ingredient, o
   const opacity = isDragging ? 0.5 : 1;
 
   return (
-    <div 
-      ref={dragRef} 
-      style={{ opacity }} 
-      onClick={() => onClick(ingredient)} 
+    <div
+      ref={dragRef}
+      style={{ opacity }}
+      onClick={() => onClick(ingredient)}
       className={styles.ingredientWrapper}
     >
       {count > 0 && <div className={styles.counter}>{count}</div>}

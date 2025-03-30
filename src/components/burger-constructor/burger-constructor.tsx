@@ -8,7 +8,7 @@ import styles from './burger-constructor.module.scss';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { AppDispatch, RootState } from '../../services/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createOrder } from '../../services/order-slice';
 import { useDrop } from 'react-dnd';
 import { addIngredient, setBun } from '../../services/constructor-slice';
@@ -19,13 +19,13 @@ import { useNavigate } from 'react-router-dom';
 function BurgerConstructor() {
   const navigate = useNavigate();
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
 
-  const { bun, ingredients } = useSelector(
+  const { bun, ingredients } = useAppSelector(
     (state: RootState) => state.constructor,
   );
 
-  const orderNumber = useSelector(
+  const orderNumber = useAppSelector(
     (state: RootState) => state.order.orderNumber,
   );
 

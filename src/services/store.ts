@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Middleware } from '@reduxjs/toolkit';
 import ingredientsReducer from './ingredients-slice';
 import constructorReducer from './constructor-slice';
 import selectIngedientReducer from './select-ingredients-slice';
@@ -31,7 +31,7 @@ const userFeedMiddleware = createSocketMiddleware({
   onClose: wsUserClosed.type,
   onError: wsUserError.type,
   onMessage: wsUserMessage.type,
-});
+}) as Middleware;
 
 const feedMiddleware = createSocketMiddleware({
   wsInit: wsInit.type,
@@ -40,12 +40,12 @@ const feedMiddleware = createSocketMiddleware({
   onClose: onClose.type,
   onError: onError.type,
   onMessage: onMessage.type,
-});
+}) as Middleware;
 
 export const store = configureStore({
   reducer: {
     ingredients: ingredientsReducer,
-    constructor: constructorReducer, // именно этот ключ вы затем используете через useSelector
+    constructor: constructorReducer,
     selectIngedient: selectIngedientReducer,
     order: orderReducer,
     register: registerReducer,

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './feed-card.module.scss';
 import { useLocation } from 'react-router-dom';
 import { RootState } from '../../../services/store';
 import { IBurgerIngredient } from '../../burger-ingredients/dto';
+import { useAppSelector } from '../../../app/hooks';
 
 interface IBurgerIngredientWithQuantity extends IBurgerIngredient {
   quantity: number;
@@ -25,8 +25,8 @@ const FeedCard = () => {
   const { orderId } = useParams();
   const location = useLocation();
   const isModal = !!location.state?.background;
-  const orders = useSelector((state: RootState) => state.feedOrder.orders);
-  const ingredientsData = useSelector(
+  const orders = useAppSelector((state: RootState) => state.feedOrder.orders);
+  const ingredientsData = useAppSelector(
     (state: RootState) => state.ingredients.list,
   );
 
