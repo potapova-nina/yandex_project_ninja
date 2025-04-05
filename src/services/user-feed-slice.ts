@@ -10,7 +10,7 @@ interface IOrder {
   name: string;
 }
 
-interface UserFeedState {
+export interface UserFeedState {
   orders: IOrder[];
   wsConnected: boolean;
   error: Event | null;

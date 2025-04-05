@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
 
-interface IOrder {
+export interface IOrder {
   ingredients: string[];
   _id: string;
   status: string;
@@ -10,16 +10,22 @@ interface IOrder {
   name: string;
 }
 
-interface IWSResponse {
+export interface IWSResponse {
   orders: IOrder[];
   total: number;
   totalToday: number;
 }
 
-interface ProfileOrdersState extends IWSResponse {
+export interface ProfileOrdersState extends IWSResponse {
   wsConnected: boolean;
   error?: Event;
 }
+
+//  Экшены
+export const wsProfileOpen = createAction('WS_PROFILE_OPEN');
+export const wsProfileClose = createAction('WS_PROFILE_CLOSE');
+export const wsProfileError = createAction<Event>('WS_PROFILE_ERROR');
+export const wsProfileMessage = createAction<IWSResponse>('WS_PROFILE_MESSAGE');
 
 const initialState: ProfileOrdersState = {
   orders: [],
@@ -34,18 +40,18 @@ const profileOrdersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase('WS_PROFILE_OPEN', (state) => {
+      .addCase(wsProfileOpen, (state) => {
         state.wsConnected = true;
         state.error = undefined;
       })
-      .addCase('WS_PROFILE_CLOSE', (state) => {
+      .addCase(wsProfileClose, (state) => {
         state.wsConnected = false;
       })
-      .addCase('WS_PROFILE_ERROR', (state, action: PayloadAction<Event>) => {
+      .addCase(wsProfileError, (state, action: PayloadAction<Event>) => {
         state.error = action.payload;
       })
       .addCase(
-        'WS_PROFILE_MESSAGE',
+        wsProfileMessage,
         (state, action: PayloadAction<IWSResponse>) => {
           state.orders = action.payload.orders;
           state.total = action.payload.total;

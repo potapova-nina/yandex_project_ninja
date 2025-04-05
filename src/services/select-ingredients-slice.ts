@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IBurgerIngredient } from '../components/burger-ingredients/dto';
 
-interface SelectedIngredientState {
+export interface SelectedIngredientState {
   selectedIngredient: IBurgerIngredient | null;
 }
 
