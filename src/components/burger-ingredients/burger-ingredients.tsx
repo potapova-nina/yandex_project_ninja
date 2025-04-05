@@ -1,6 +1,5 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../services/store';
 import styles from './burder-ingredients.module.scss';
 import { IBurgerIngredient } from './dto';
@@ -8,6 +7,7 @@ import { selectIngedient } from '../../services/select-ingredients-slice';
 import DraggableIngredient from './draggable-ingredient/draggable-ingredient';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 //всем привет! мой проект уже был прослосью типизирован TS
 //не знаю, что пушить :)))
@@ -17,8 +17,8 @@ function BurgerIngredients() {
   const location = useLocation();
   const [current, setCurrent] = useState<string>('one');
 
-  const dispatch: AppDispatch = useDispatch();
-  const { list: dataIngredients } = useSelector(
+  const dispatch: AppDispatch = useAppDispatch();
+  const { list: dataIngredients } = useAppSelector(
     (state: RootState) => state.ingredients,
   );
 

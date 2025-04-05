@@ -9,6 +9,9 @@ import Profile from '../../pages/profile/profile';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route';
 import IngredientDetails from '../../components/ingredient-details/ingredient-details';
 import Modal from '../../components/modal/modal';
+import Feed from '../../components/feed/feed';
+import FeedCard from '../../components/feed/feed-card/feed-card';
+import ProfileOrderHistory from '../../components/profile-order-history/profile-order-history';
 
 export const AppRouter: FC = () => {
   const location = useLocation();
@@ -35,6 +38,19 @@ export const AppRouter: FC = () => {
         />
         <Route path="/profile" element={<OnlyAuth component={<Profile />} />} />
 
+        <Route
+          path="/profile/orders"
+          element={<OnlyAuth component={<ProfileOrderHistory />} />}
+        />
+        <Route
+          path="/profile/orders/:orderId"
+          element={<OnlyAuth component={<FeedCard />} />}
+        />
+
+        <Route path="/feed" element={<Feed />} />
+
+        <Route path="/feed/:orderId" element={<FeedCard />} />
+
         {/* Главная страница ингредиентов */}
         <Route path="/ingredients" element={<BurgerIngredients />} />
 
@@ -58,6 +74,30 @@ export const AppRouter: FC = () => {
                 title="Детали ингредиента"
               >
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+
+          <Route
+            path="/feed/:orderId"
+            element={
+              <Modal
+                onClose={() => window.history.back()}
+                title="Детали заказа"
+              >
+                <FeedCard />
+              </Modal>
+            }
+          />
+
+          <Route
+            path="/profile/orders/:orderId"
+            element={
+              <Modal
+                onClose={() => window.history.back()}
+                title="Детали заказа"
+              >
+                <OnlyAuth component={<FeedCard />} />
               </Modal>
             }
           />

@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../services/store';
 import styles from './ingredient-details.module.scss';
 import { selectIngedient } from '../../services/select-ingredients-slice';
-
-// Если у вас есть асинхронный экшн для загрузки ингредиентов, его можно импортировать
-// import { fetchIngredients } from '../../services/ingredientsSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 const IngredientDetails: React.FC = () => {
   const { ingredientId } = useParams<{ ingredientId: string }>();
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
 
   // Берём список ингредиентов (предполагается, что он уже был загружен ранее)
-  const ingredientsList = useSelector(
+  const ingredientsList = useAppSelector(
     (state: RootState) => state.ingredients.list,
   );
 

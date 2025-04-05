@@ -5,9 +5,9 @@ import {
 import styles from './register.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { AppDispatch, RootState } from '../../services/store';
-import { useDispatch, useSelector } from 'react-redux';
 import { fetchRegistration } from '../../services/register-slice';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -16,8 +16,8 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const passwordHidden = useRef<HTMLInputElement | null>(null);
 
-  const dispatch: AppDispatch = useDispatch();
-  const { success } = useSelector((state: RootState) => state.register);
+  const dispatch: AppDispatch = useAppDispatch();
+  const { success } = useAppSelector((state: RootState) => state.register);
 
   const onClickPasswordHidden = () => {
     setTimeout(() => {
