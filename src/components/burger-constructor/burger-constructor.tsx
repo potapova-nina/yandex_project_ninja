@@ -29,7 +29,6 @@ function BurgerConstructor() {
     (state: RootState) => state.order.orderNumber,
   );
 
-  // Итоговая цена: булка учитывается дважды + сумма цен остальных ингредиентов
   const totalPrice =
     (bun ? bun.price * 2 : 0) +
     (ingredients ? ingredients.reduce((sum, ing) => sum + ing.price, 0) : 0);
@@ -55,7 +54,6 @@ function BurgerConstructor() {
     setIsOrderModalOpen(false);
   };
 
-  // Drop-цель для добавления ингредиентов (булка обрабатывается отдельно)
   const [{ isHover }, dropRef] = useDrop<
     IBurgerIngredient,
     void,
@@ -78,18 +76,14 @@ function BurgerConstructor() {
     ? { border: '2px solid pink', borderRadius: '20px' }
     : {};
 
-  // Флаг, чтобы восстановление из localStorage происходило только один раз
   const isRestored = useRef(false);
 
-  // Восстановление состояния из localStorage (только если авторизован и состояние конструктора пустое)
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
       localStorage.removeItem('burgerConstructor');
-
       return;
     }
-    // Если состояние уже заполнено или мы уже восстановили – ничего не делаем
     if (isRestored.current || bun || (ingredients && ingredients.length > 0)) {
       isRestored.current = true;
       return;
@@ -114,7 +108,6 @@ function BurgerConstructor() {
     isRestored.current = true;
   }, [bun, ingredients, dispatch]);
 
-  // Сохранение состояния конструктора в localStorage (только если авторизован)
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
@@ -134,8 +127,12 @@ function BurgerConstructor() {
 
   return (
     <>
-      <div className={styles.container} ref={dropRef} style={dropAreaStyle}>
-        {/* Верхняя булка */}
+      <div
+        className={styles.container}
+        ref={dropRef}
+        style={dropAreaStyle}
+        data-test="constructor-drop-area"
+      >
         {bun ? (
           <ConstructorElement
             type="top"
@@ -151,7 +148,6 @@ function BurgerConstructor() {
           </div>
         )}
 
-        {/* Список сортируемых ингредиентов */}
         {ingredients && (
           <div className={styles.scrollable}>
             {ingredients.map((ingredient, index) => (
@@ -164,7 +160,6 @@ function BurgerConstructor() {
           </div>
         )}
 
-        {/* Нижняя булка */}
         {bun ? (
           <ConstructorElement
             type="bottom"
@@ -183,14 +178,23 @@ function BurgerConstructor() {
             {totalPrice ? totalPrice : 0}
           </p>
           <CurrencyIcon type="primary" className="mr-10" />
-          <Button htmlType="button" onClick={handleOpenOrderModal}>
+          <Button
+            htmlType="button"
+            onClick={handleOpenOrderModal}
+            data-test="order-button"
+          >
             Оформить заказ
           </Button>
         </div>
       </div>
+
       {isOrderModalOpen && (
-        <Modal onClose={handleCloseOrderModal} title=" ">
-          <OrderDetails orderNumber={orderNumber} />
+        <Modal
+          onClose={handleCloseOrderModal}
+          title=" "
+          data-test="order-modal"
+        >
+          <OrderDetails orderNumber={orderNumber} data-test="order-number" />
         </Modal>
       )}
     </>

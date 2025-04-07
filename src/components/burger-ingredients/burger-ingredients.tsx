@@ -9,9 +9,6 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
-//всем привет! мой проект уже был прослосью типизирован TS
-//не знаю, что пушить :)))
-
 function BurgerIngredients() {
   const navigate = useNavigate();
   const location = useLocation();

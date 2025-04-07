@@ -49,6 +49,7 @@ const DraggableIngredient: React.FC<DraggableIngredientProps> = ({
       style={{ opacity }}
       onClick={() => onClick(ingredient)}
       className={styles.ingredientWrapper}
+      data-test="ingredient-card"
     >
       {count > 0 && <div className={styles.counter}>{count}</div>}
       <IngredientsItems
