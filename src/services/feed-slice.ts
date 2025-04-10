@@ -30,7 +30,7 @@ const feedSlice = createSlice({
   name: 'feed',
   initialState,
   reducers: {
-    wsInit: (_, action: PayloadAction<string>) => {},
+    wsInit: (_, __: PayloadAction<string>) => {},
     wsClose: () => {},
 
     onOpen: (state) => {

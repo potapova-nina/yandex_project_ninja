@@ -26,7 +26,7 @@ const userFeedSlice = createSlice({
   name: 'userFeed',
   initialState,
   reducers: {
-    wsUserInit: (_, action: PayloadAction<string>) => {},
+    wsUserInit: (_, __: PayloadAction<string>) => {},
     wsUserClose: () => {},
     wsUserOpen: (state) => {
       state.wsConnected = true;
