@@ -10,7 +10,7 @@ export interface IBurgerIngredient {
   image: string;
   image_mobile: string;
   image_large: string;
-  __v: number;
+  __v?: number;
 }
 
 export interface IBurgerIngredientResponse {

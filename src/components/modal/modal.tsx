@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
-import styles from "./modal.module.scss";
-import ModalOverlay from "../modal-overlay/modal-overlay";
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import styles from './modal.module.scss';
+import ModalOverlay from '../modal-overlay/modal-overlay';
 
 interface ModalProps {
   title?: string;
@@ -10,18 +10,18 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
 
   useEffect(() => {
     const handleEscClose = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
 
-    document.addEventListener("keydown", handleEscClose);
+    document.addEventListener('keydown', handleEscClose);
     return () => {
-      document.removeEventListener("keydown", handleEscClose);
+      document.removeEventListener('keydown', handleEscClose);
     };
   }, [onClose]);
 
@@ -29,26 +29,26 @@ const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
 
   return ReactDOM.createPortal(
     <div>
-       <ModalOverlay onClose={onClose} />
-   
-    <div className={styles.modal}>
-     
-      <div className={styles.modalContent}>
-        <div className={styles.modalHeader}>
-          {title && <p className="text text_type_main-medium">{title} </p>}
-          <button className={styles.closeButton} onClick={onClose}>
-            ✖
-          </button>
-        </div>
-        <div >
-          {children}
+      <ModalOverlay onClose={onClose} />
+
+      <div className={styles.modal}>
+        <div className={styles.modalContent}>
+          <div className={styles.modalHeader}>
+            {title && <p className="text text_type_main-medium">{title} </p>}
+            <button
+              className={styles.closeButton}
+              onClick={onClose}
+              data-test="modal-close"
+            >
+              ✖
+            </button>
           </div>
+          <div>{children}</div>
+        </div>
       </div>
-    </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
-   
 };
 
 export default Modal;

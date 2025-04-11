@@ -41,7 +41,6 @@ const SortableIngredient: React.FC<SortableIngredientProps> = ({
       const hoverIndex = index;
       if (dragIndex === hoverIndex) return;
 
-      // Получаем размеры элемента на экране
       const hoverBoundingRect = ref.current.getBoundingClientRect();
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -49,12 +48,10 @@ const SortableIngredient: React.FC<SortableIngredientProps> = ({
       if (!clientOffset) return;
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-      // Перемещаем элемент, только если курсор пересек середину
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
       dispatch(moveIngredient({ dragIndex, hoverIndex }));
-      // Обновляем индекс перемещаемого элемента
       item.index = hoverIndex;
     },
   });
@@ -66,6 +63,7 @@ const SortableIngredient: React.FC<SortableIngredientProps> = ({
       ref={ref}
       style={{ opacity: isDragging ? 0.5 : 1 }}
       className={styles.ingredient}
+      data-test="constructor-ingredient"
     >
       <DragIcon type="primary" />
       <ConstructorElement
