@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@4tw/cypress-drag-drop@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@4tw/cypress-drag-drop/-/cypress-drag-drop-2.3.0.tgz#e96947a62f2d7e10180d9442fc4da699e0b3bd7c"
+  integrity sha512-r6/Um+GLidi9mFTx8qiFf1ECMNmwLTLp+CgKVLpYZvJ2aV6mYoe1Uv8Iq1AwqRhhIAdf04aFJ0xzGEO1gnOm1g==
+
 "@ampproject/remapping@^2.2.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.3.0.tgz#ed441b6fa600072520ce18b43d2c8cc8caecc7f4"
